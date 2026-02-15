@@ -320,6 +320,12 @@ export default function TRMPlatform() {
   const [showOfferDialog, setShowOfferDialog] = useState(false);
   const [showNotificationCenter, setShowNotificationCenter] = useState(false);
   const [showOnboardingDialog, setShowOnboardingDialog] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const [showInvoiceDialog, setShowInvoiceDialog] = useState(false);
+  const [showClientPortal, setShowClientPortal] = useState(false);
+  const [showReferralDialog, setShowReferralDialog] = useState(false);
+  const [showSkillsDialog, setShowSkillsDialog] = useState(false);
   
   // Edit states
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
@@ -342,6 +348,27 @@ export default function TRMPlatform() {
     { id: '7', task: 'Profile photo submission', completed: false },
     { id: '8', task: 'Company orientation scheduled', completed: false }
   ]);
+  
+  // Import/Export states
+  const [importData, setImportData] = useState<string>('');
+  const [importPreview, setImportPreview] = useState<{name: string; email: string}[]>([]);
+  const [exportType, setExportType] = useState<string>('candidates');
+  
+  // Invoice states
+  const [invoiceData, setInvoiceData] = useState<{
+    clientName: string;
+    placements: {candidateName: string; position: string; salary: number; fee: number}[];
+    total: number;
+  } | null>(null);
+  
+  // Referral states
+  const [referrals, setReferrals] = useState<{id: string; candidateName: string; referredBy: string; status: string; reward: number}[]>([
+    { id: 'r1', candidateName: 'Mg Than', referredBy: 'U Aung', status: 'hired', reward: 50000 },
+    { id: 'r2', candidateName: 'Ma Mya', referredBy: 'Daw Hla', status: 'pending', reward: 0 }
+  ]);
+  
+  // Skills assessment states
+  const [skillAssessments, setSkillAssessments] = useState<{skill: string; score: number; maxScore: number}[]>([]);
   
   // AI states
   const [aiLoading, setAiLoading] = useState(false);
@@ -2019,6 +2046,270 @@ export default function TRMPlatform() {
     );
   };
 
+  // Import Dialog
+  const renderImportDialog = () => (
+    <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+      <DialogContent className={`max-w-2xl ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Upload className="h-5 w-5 text-blue-500" /> Bulk Import Candidates
+          </DialogTitle>
+          <DialogDescription>Import candidates from CSV or Excel data</DialogDescription>
+        </DialogHeader>
+        <Tabs defaultValue="paste" className="mt-4">
+          <TabsList className="grid grid-cols-2 w-full">
+            <TabsTrigger value="paste">Paste Data</TabsTrigger>
+            <TabsTrigger value="template">Template</TabsTrigger>
+          </TabsList>
+          <TabsContent value="paste" className="space-y-4 mt-4">
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Paste CSV Data</Label>
+              <Textarea
+                placeholder="name,email,phone,location,skills,experience,education
+Mg Aung,mgaung@gmail.com,+95 9 111 222 333,Yangon,Machine Operation,5,High School"
+                value={importData}
+                onChange={(e) => setImportData(e.target.value)}
+                className={`mt-1.5 h-40 font-mono text-xs ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+              />
+            </div>
+            {importPreview.length > 0 && (
+              <div>
+                <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Preview ({importPreview.length} records)</Label>
+                <div className={`mt-2 p-3 rounded-lg max-h-32 overflow-y-auto ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                  {importPreview.slice(0, 5).map((p, i) => (
+                    <div key={i} className="text-sm flex justify-between py-1">
+                      <span>{p.name}</span>
+                      <span className="text-slate-500">{p.email}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </TabsContent>
+          <TabsContent value="template" className="mt-4">
+            <div className={`p-6 rounded-lg text-center ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+              <FileSpreadsheet className="h-12 w-12 mx-auto mb-4 text-green-500" />
+              <p className={`font-semibold mb-2 ${theme === 'dark' ? 'text-white' : ''}`}>Download Import Template</p>
+              <p className="text-sm text-slate-500 mb-4">Use our template to ensure correct data format</p>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" /> Download CSV Template
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowImportDialog(false)}>Cancel</Button>
+          <Button onClick={() => setShowImportDialog(false)}>
+            <Upload className="h-4 w-4 mr-2" /> Import Candidates
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Export Dialog
+  const renderExportDialog = () => (
+    <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+      <DialogContent className={`max-w-md ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Download className="h-5 w-5 text-green-500" /> Export Data
+          </DialogTitle>
+          <DialogDescription>Download your recruitment data</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 mt-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Export Type</Label>
+            <Select value={exportType} onValueChange={setExportType}>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="candidates">Candidates</SelectItem>
+                <SelectItem value="jobs">Job Orders</SelectItem>
+                <SelectItem value="clients">Clients</SelectItem>
+                <SelectItem value="placements">Placements</SelectItem>
+                <SelectItem value="tasks">Tasks</SelectItem>
+                <SelectItem value="deals">Pipeline Deals</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+            <p className="text-sm font-medium mb-2">Available Formats:</p>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="flex-1">CSV</Button>
+              <Button variant="outline" size="sm" className="flex-1">Excel</Button>
+              <Button variant="outline" size="sm" className="flex-1">PDF</Button>
+            </div>
+          </div>
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowExportDialog(false)}>Cancel</Button>
+          <Button onClick={() => setShowExportDialog(false)}>
+            <Download className="h-4 w-4 mr-2" /> Export
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Invoice Dialog
+  const renderInvoiceDialog = () => (
+    <Dialog open={showInvoiceDialog} onOpenChange={setShowInvoiceDialog}>
+      <DialogContent className={`max-w-2xl ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <DollarSign className="h-5 w-5 text-green-500" /> Generate Invoice
+          </DialogTitle>
+          <DialogDescription>Create professional invoices for placements</DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Client Name</Label>
+            <Select>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select client" />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map(c => <SelectItem key={c.id} value={c.id}>{c.companyName}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Invoice Number</Label>
+            <Input placeholder="Auto-generated" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Issue Date</Label>
+            <Input type="date" defaultValue={new Date().toISOString().split('T')[0]} className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Due Date</Label>
+            <Input type="date" defaultValue={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]} className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+        </div>
+        
+        <div className="mt-4">
+          <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Select Placements to Invoice</Label>
+          <div className={`mt-2 rounded-lg max-h-48 overflow-y-auto ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+            {placements.filter(p => p.status === 'confirmed').map(p => (
+              <div key={p.id} className={`flex items-center justify-between p-3 border-b ${theme === 'dark' ? 'border-slate-600' : 'border-slate-200'}`}>
+                <div className="flex items-center gap-3">
+                  <Checkbox id={`inv-${p.id}`} />
+                  <div>
+                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{p.candidateName}</p>
+                    <p className="text-xs text-slate-500">{p.jobTitle}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-bold text-green-600">{formatMMK(p.fee)}</p>
+                  <p className="text-xs text-slate-500">{p.feePercentage}% of {formatMMK(p.salary)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowInvoiceDialog(false)}>Cancel</Button>
+          <Button onClick={() => setShowInvoiceDialog(false)}>
+            <FileText className="h-4 w-4 mr-2" /> Generate Invoice
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Referral Dialog
+  const renderReferralDialog = () => (
+    <Dialog open={showReferralDialog} onOpenChange={setShowReferralDialog}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Users2 className="h-5 w-5 text-purple-500" /> Referral Program
+          </DialogTitle>
+          <DialogDescription>Track and manage candidate referrals</DialogDescription>
+        </DialogHeader>
+        <div className="mt-4 space-y-4">
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-purple-50'}`}>
+            <div className="flex items-center justify-between mb-2">
+              <span className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>Referral Reward</span>
+              <Badge className="bg-purple-100 text-purple-700">K 50,000 per hire</Badge>
+            </div>
+            <p className="text-sm text-slate-500">Earn rewards for every successful referral that gets hired</p>
+          </div>
+          
+          <div className="space-y-2">
+            <p className={`text-sm font-medium ${theme === 'dark' ? 'text-slate-300' : ''}`}>Recent Referrals</p>
+            {referrals.map(r => (
+              <div key={r.id} className={`flex items-center justify-between p-3 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                <div>
+                  <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{r.candidateName}</p>
+                  <p className="text-xs text-slate-500">Referred by {r.referredBy}</p>
+                </div>
+                <div className="text-right">
+                  <Badge className={r.status === 'hired' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}>
+                    {r.status}
+                  </Badge>
+                  {r.reward > 0 && <p className="text-xs text-green-600 mt-1">+{formatMMK(r.reward)}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowReferralDialog(false)}>Close</Button>
+          <Button><Plus className="h-4 w-4 mr-2" /> Add Referral</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Skills Assessment Dialog
+  const renderSkillsDialog = () => (
+    <Dialog open={showSkillsDialog} onOpenChange={setShowSkillsDialog}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Award className="h-5 w-5 text-orange-500" /> Skills Assessment
+          </DialogTitle>
+          <DialogDescription>Evaluate candidate skills</DialogDescription>
+        </DialogHeader>
+        <div className="mt-4 space-y-4">
+          {selectedCandidate && (
+            <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+              <p className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{selectedCandidate.name}</p>
+              <p className="text-sm text-slate-500">{selectedCandidate.skills?.join(', ')}</p>
+            </div>
+          )}
+          
+          <div className="space-y-3">
+            {(selectedCandidate?.skills || ['Communication', 'Technical', 'Problem Solving']).map((skill, idx) => (
+              <div key={idx}>
+                <div className="flex justify-between text-sm mb-1">
+                  <span className={theme === 'dark' ? 'text-slate-300' : ''}>{skill}</span>
+                  <span className="font-medium">7/10</span>
+                </div>
+                <Progress value={70} className="h-2" />
+              </div>
+            ))}
+          </div>
+          
+          <div className={`p-4 rounded-lg border-2 border-dashed ${theme === 'dark' ? 'border-slate-600' : 'border-slate-200'}`}>
+            <p className={`text-center text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+              AI-powered skill assessment coming soon
+            </p>
+          </div>
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowSkillsDialog(false)}>Close</Button>
+          <Button><Brain className="h-4 w-4 mr-2" /> Run AI Assessment</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
   // ==================== RENDER ====================
   if (!isAuthenticated || !currentUser) return renderLogin();
 
@@ -2056,6 +2347,11 @@ export default function TRMPlatform() {
       {renderOfferLetterDialog()}
       {renderNotificationCenterDialog()}
       {renderOnboardingDialog()}
+      {renderImportDialog()}
+      {renderExportDialog()}
+      {renderInvoiceDialog()}
+      {renderReferralDialog()}
+      {renderSkillsDialog()}
     </div>
   );
 }
