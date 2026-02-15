@@ -611,6 +611,34 @@ export default function TRMPlatform() {
     localStorage.setItem('trm-placements', JSON.stringify(placements));
   }, [placements]);
   
+  // Try to load data from Supabase on mount
+  const [isLoadingFromSupabase, setIsLoadingFromSupabase] = useState(false);
+  const [supabaseConnected, setSupabaseConnected] = useState(false);
+  
+  useEffect(() => {
+    const loadFromSupabase = async () => {
+      setIsLoadingFromSupabase(true);
+      try {
+        const response = await fetch('/api/database');
+        const result = await response.json();
+        if (result.success && result.data) {
+          setSupabaseConnected(true);
+          if (result.data.candidates?.length > 0) setCandidates(result.data.candidates);
+          if (result.data.jobs?.length > 0) setJobs(result.data.jobs);
+          if (result.data.clients?.length > 0) setClients(result.data.clients);
+          if (result.data.interviews?.length > 0) setInterviews(result.data.interviews);
+          if (result.data.tasks?.length > 0) setTasks(result.data.tasks);
+          if (result.data.deals?.length > 0) setDeals(result.data.deals);
+          if (result.data.placements?.length > 0) setPlacements(result.data.placements);
+        }
+      } catch (error) {
+        console.log('Using localStorage fallback');
+      }
+      setIsLoadingFromSupabase(false);
+    };
+    loadFromSupabase();
+  }, []);
+  
   // UI
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -3052,6 +3080,372 @@ export default function TRMPlatform() {
     </Dialog>
   );
 
+  const renderJobDialog = () => (
+    <Dialog open={showJobDialog} onOpenChange={setShowJobDialog}>
+      <DialogContent className={`max-w-2xl max-h-[90vh] overflow-y-auto ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={theme === 'dark' ? 'text-white' : ''}>{editingJob ? 'Edit' : 'Add'} Job Order</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="col-span-2">
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Job Title</Label>
+            <Input
+              placeholder="e.g. Production Line Worker"
+              defaultValue={editingJob?.title || ''}
+              id="job-title"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Client</Label>
+            <Select defaultValue={editingJob?.clientId || ''}>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select client" />
+              </SelectTrigger>
+              <SelectContent>
+                {clients.map(client => (
+                  <SelectItem key={client.id} value={client.id}>{client.companyName}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Location</Label>
+            <Input
+              placeholder="e.g. Yangon"
+              defaultValue={editingJob?.location || ''}
+              id="job-location"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Salary Min (MMK)</Label>
+            <Input
+              type="number"
+              placeholder="e.g. 300000"
+              defaultValue={editingJob?.salaryMin || ''}
+              id="job-salary-min"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Salary Max (MMK)</Label>
+            <Input
+              type="number"
+              placeholder="e.g. 500000"
+              defaultValue={editingJob?.salaryMax || ''}
+              id="job-salary-max"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Quantity</Label>
+            <Input
+              type="number"
+              placeholder="Number of positions"
+              defaultValue={editingJob?.quantity || 1}
+              id="job-quantity"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Priority</Label>
+            <Select defaultValue={editingJob?.priority || 'medium'}>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="urgent">Urgent</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Deadline</Label>
+            <Input
+              type="date"
+              defaultValue={editingJob?.deadline || ''}
+              id="job-deadline"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Experience Required (years)</Label>
+            <Input
+              type="number"
+              placeholder="e.g. 2"
+              defaultValue={editingJob?.experienceRequired || 0}
+              id="job-experience"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div className="col-span-2">
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Skills Required (comma separated)</Label>
+            <Input
+              placeholder="e.g. Machine Operation, Quality Control, Safety"
+              defaultValue={editingJob?.skills?.join(', ') || ''}
+              id="job-skills"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Category</Label>
+            <Select defaultValue={editingJob?.category || 'Manufacturing'}>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+                <SelectItem value="Construction">Construction</SelectItem>
+                <SelectItem value="Banking">Banking</SelectItem>
+                <SelectItem value="Hospitality">Hospitality</SelectItem>
+                <SelectItem value="IT">IT</SelectItem>
+                <SelectItem value="Retail">Retail</SelectItem>
+                <SelectItem value="Healthcare">Healthcare</SelectItem>
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowJobDialog(false)}>Cancel</Button>
+          <Button onClick={() => {
+            const title = (document.getElementById('job-title') as HTMLInputElement)?.value;
+            const location = (document.getElementById('job-location') as HTMLInputElement)?.value;
+            const salaryMin = parseInt((document.getElementById('job-salary-min') as HTMLInputElement)?.value) || 0;
+            const salaryMax = parseInt((document.getElementById('job-salary-max') as HTMLInputElement)?.value) || 0;
+            const quantity = parseInt((document.getElementById('job-quantity') as HTMLInputElement)?.value) || 1;
+            const deadline = (document.getElementById('job-deadline') as HTMLInputElement)?.value;
+            const experienceRequired = parseInt((document.getElementById('job-experience') as HTMLInputElement)?.value) || 0;
+            const skillsStr = (document.getElementById('job-skills') as HTMLInputElement)?.value;
+            
+            if (editingJob) {
+              setJobs(prev => prev.map(j => j.id === editingJob.id ? {
+                ...j, title, location, salaryMin, salaryMax, quantity, deadline, experienceRequired,
+                skills: skillsStr?.split(',').map(s => s.trim()).filter(Boolean) || []
+              } : j));
+            } else if (currentUser) {
+              const newJob: Job = {
+                id: `j${Date.now()}`, title: title || '', clientId: 'c1', clientName: clients[0]?.companyName || 'Client',
+                location: location || '', salaryMin, salaryMax, quantity, filled: 0,
+                priority: 'medium', status: 'in-progress', deadline, createdAt: new Date().toISOString(),
+                category: 'Manufacturing', skills: skillsStr?.split(',').map(s => s.trim()).filter(Boolean) || [],
+                experienceRequired, assignedTo: currentUser.id
+              };
+              setJobs(prev => [...prev, newJob]);
+            }
+            setShowJobDialog(false);
+            setEditingJob(null);
+          }}>
+            {editingJob ? 'Update' : 'Add'} Job
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  const renderTaskDialog = () => (
+    <Dialog open={showTaskDialog} onOpenChange={setShowTaskDialog}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={theme === 'dark' ? 'text-white' : ''}>{editingTask ? 'Edit' : 'Add'} Task</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 mt-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Task Title</Label>
+            <Input
+              placeholder="e.g. Follow up with client"
+              defaultValue={editingTask?.title || ''}
+              id="task-title"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Description</Label>
+            <Textarea
+              placeholder="Task details..."
+              defaultValue={editingTask?.description || ''}
+              id="task-description"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Type</Label>
+              <Select defaultValue={editingTask?.type || 'call'}>
+                <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="call">Call</SelectItem>
+                  <SelectItem value="meeting">Meeting</SelectItem>
+                  <SelectItem value="email">Email</SelectItem>
+                  <SelectItem value="document">Document</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Priority</Label>
+              <Select defaultValue={editingTask?.priority || 'medium'}>
+                <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Due Date</Label>
+              <Input
+                type="date"
+                defaultValue={editingTask?.dueDate || ''}
+                id="task-date"
+                className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+              />
+            </div>
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Due Time</Label>
+              <Input
+                type="time"
+                defaultValue={editingTask?.dueTime || ''}
+                id="task-time"
+                className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+              />
+            </div>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Related To</Label>
+            <Input
+              placeholder="e.g. KBZ Bank"
+              defaultValue={editingTask?.relatedTo || ''}
+              id="task-related"
+              className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+            />
+          </div>
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowTaskDialog(false)}>Cancel</Button>
+          <Button onClick={() => {
+            const title = (document.getElementById('task-title') as HTMLInputElement)?.value;
+            const description = (document.getElementById('task-description') as HTMLTextAreaElement)?.value;
+            const dueDate = (document.getElementById('task-date') as HTMLInputElement)?.value;
+            const dueTime = (document.getElementById('task-time') as HTMLInputElement)?.value;
+            const relatedTo = (document.getElementById('task-related') as HTMLInputElement)?.value;
+            
+            if (editingTask) {
+              setTasks(prev => prev.map(t => t.id === editingTask.id ? {
+                ...t, title, description, dueDate, dueTime, relatedTo
+              } : t));
+            } else if (currentUser) {
+              const newTask: Task = {
+                id: `t${Date.now()}`, title: title || '', description: description || '',
+                type: 'call', priority: 'medium', status: 'pending', dueDate, dueTime, relatedTo,
+                assignedTo: currentUser.id
+              };
+              setTasks(prev => [...prev, newTask]);
+            }
+            setShowTaskDialog(false);
+            setEditingTask(null);
+          }}>
+            {editingTask ? 'Update' : 'Add'} Task
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  const renderInterviewDialog = () => (
+    <Dialog open={showInterviewDialog} onOpenChange={setShowInterviewDialog}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={theme === 'dark' ? 'text-white' : ''}>Schedule Interview</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 mt-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Candidate</Label>
+            <Select>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select candidate" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredCandidates.filter(c => c.status !== 'placed').map(c => (
+                  <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Job</Label>
+            <Select>
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select job" />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredJobs.filter(j => j.status !== 'filled').map(j => (
+                  <SelectItem key={j.id} value={j.id}>{j.title} - {j.clientName}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Date</Label>
+              <Input type="date" id="interview-date" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+            </div>
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Time</Label>
+              <Input type="time" id="interview-time" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+            </div>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Type</Label>
+            <Select defaultValue="onsite">
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="onsite">On-site</SelectItem>
+                <SelectItem value="video">Video Call</SelectItem>
+                <SelectItem value="phone">Phone</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Meeting Link (optional)</Label>
+            <Input placeholder="https://zoom.us/j/..." id="interview-link" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowInterviewDialog(false)}>Cancel</Button>
+          <Button onClick={() => {
+            const date = (document.getElementById('interview-date') as HTMLInputElement)?.value;
+            const time = (document.getElementById('interview-time') as HTMLInputElement)?.value;
+            const link = (document.getElementById('interview-link') as HTMLInputElement)?.value;
+            
+            const newInterview: Interview = {
+              id: `int${Date.now()}`, candidateId: 'can1', candidateName: 'Candidate',
+              jobTitle: 'Position', clientName: 'Client',
+              dateTime: `${date}T${time}`, type: 'onsite', status: 'scheduled', meetingLink: link
+            };
+            setInterviews(prev => [...prev, newInterview]);
+            setShowInterviewDialog(false);
+          }}>
+            Schedule Interview
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
   const renderSettingsDialog = () => (
     <Dialog open={showSettings} onOpenChange={setShowSettings}>
       <DialogContent className={`max-w-md ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
@@ -4327,6 +4721,9 @@ Mg Aung,mgaung@gmail.com,+95 9 111 222 333,Yangon,Machine Operation,5,High Schoo
       {renderEmailComposerDialog()}
       {renderAIMatcherDialog()}
       {renderCandidateDialog()}
+      {renderJobDialog()}
+      {renderTaskDialog()}
+      {renderInterviewDialog()}
       {renderJobBoardDialog()}
       {renderOfferLetterDialog()}
       {renderNotificationCenterDialog()}
