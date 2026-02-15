@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Resources Myanmar - Clients</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>* { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar (same as dashboard) -->
+        <aside id="sidebar" class="w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800 text-white flex flex-col shadow-2xl fixed h-full z-50">
+            <div class="h-20 flex items-center gap-3 px-6 border-b border-slate-700/50">
+                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">Talent Resources</h1>
+                    <p class="text-xs text-blue-300 font-medium">Myanmar</p>
+                </div>
+            </div>
+            <nav class="flex-1 px-3 py-6 overflow-y-auto">
+                <p class="px-3 mb-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Main Menu</p>
+                <a href="dashboard.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    Dashboard
+                </a>
+                <a href="clients.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all mb-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    Clients
+                </a>
+                <a href="jobs.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    Job Orders
+                </a>
+                <a href="pipeline.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                    Sales Pipeline
+                </a>
+                <a href="candidates.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    Candidates
+                </a>
+                <a href="interviews.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Interviews
+                </a>
+                <div id="teamNav" class="hidden">
+                    <p class="px-3 mt-6 mb-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Management</p>
+                    <a href="team.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Team
+                    </a>
+                    <a href="reports.html" class="sidebar-item flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-all mb-1 hover:bg-slate-800">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        Reports
+                    </a>
+                </div>
+            </nav>
+            <div class="border-t border-slate-700/50 p-4">
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50">
+                    <div id="userAvatar" class="h-11 w-11 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center font-semibold shadow-lg text-white"></div>
+                    <div class="flex-1 min-w-0">
+                        <p id="userName" class="text-sm font-semibold text-white truncate"></p>
+                        <p id="userRole" class="text-xs text-slate-400 truncate"></p>
+                    </div>
+                    <a href="login.html" class="h-8 w-8 rounded-lg hover:bg-slate-700 flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 ml-72">
+            <header class="h-20 border-b border-slate-200 bg-white/90 backdrop-blur-sm px-8 flex items-center justify-between sticky top-0 z-40">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Clients</h1>
+                    <p class="text-sm text-slate-500">Manage your client relationships</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="openModal()" class="h-11 px-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Client
+                    </button>
+                </div>
+            </header>
+            
+            <div class="p-8">
+                <!-- Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100 text-sm">Total Clients</p>
+                                <p id="statTotal" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-green-100 text-sm">Active Clients</p>
+                                <p id="statActive" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-purple-100 text-sm">Total Value</p>
+                                <p id="statValue" class="text-3xl font-bold mt-1">K 0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-orange-100 text-sm">Total Placements</p>
+                                <p id="statPlacements" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Search & Filters -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex-1 min-w-64">
+                            <div class="relative">
+                                <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                <input type="text" id="searchInput" onkeyup="filterClients()" placeholder="Search clients..." class="w-full pl-12 h-11 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 outline-none">
+                            </div>
+                        </div>
+                        <select id="statusFilter" onchange="filterClients()" class="h-11 px-4 bg-slate-50 border border-slate-200 rounded-xl outline-none">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                        <select id="industryFilter" onchange="filterClients()" class="h-11 px-4 bg-slate-50 border border-slate-200 rounded-xl outline-none">
+                            <option value="">All Industries</option>
+                            <option value="Food & Beverage">Food & Beverage</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Banking & Finance">Banking & Finance</option>
+                            <option value="Textile & Garment">Textile & Garment</option>
+                            <option value="Hospitality & Tourism">Hospitality</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Clients Grid -->
+                <div id="clientsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Add/Edit Modal -->
+    <div id="clientModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                <h2 id="modalTitle" class="text-xl font-bold text-slate-800">Add New Client</h2>
+                <button onclick="closeModal()" class="h-10 w-10 rounded-lg hover:bg-slate-100 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <form id="clientForm" class="p-6 space-y-4">
+                <input type="hidden" id="clientId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Company Name *</label>
+                        <input type="text" id="clientName" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Industry *</label>
+                        <select id="clientIndustry" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                            <option value="">Select Industry</option>
+                            <option value="Food & Beverage">Food & Beverage</option>
+                            <option value="Construction">Construction</option>
+                            <option value="Energy & Power">Energy & Power</option>
+                            <option value="Textile & Garment">Textile & Garment</option>
+                            <option value="Banking & Finance">Banking & Finance</option>
+                            <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Healthcare">Healthcare</option>
+                            <option value="IT & Technology">IT & Technology</option>
+                            <option value="Retail">Retail</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Status</label>
+                        <select id="clientStatus" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Contact Person *</label>
+                        <input type="text" id="clientContact" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Email *</label>
+                        <input type="email" id="clientEmail" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Phone</label>
+                        <input type="text" id="clientPhone" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none" placeholder="+959 XXX XXX XXX">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">City</label>
+                        <select id="clientCity" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                            <option value="Yangon">Yangon</option>
+                            <option value="Mandalay">Mandalay</option>
+                            <option value="Naypyidaw">Naypyidaw</option>
+                            <option value="Bago">Bago</option>
+                            <option value="Mawlamyine">Mawlamyine</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Address</label>
+                        <input type="text" id="clientAddress" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Notes</label>
+                        <textarea id="clientNotes" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none resize-none"></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="h-11 px-6 border border-slate-200 text-slate-600 font-medium rounded-xl hover:bg-slate-50 transition-colors">Cancel</button>
+                    <button type="submit" class="h-11 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">Save Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize user
+        const user = JSON.parse(localStorage.getItem('trm_currentUser') || '{}');
+        if (!user.id && user.role !== 'admin') window.location.href = 'login.html';
+        
+        document.getElementById('userAvatar').textContent = user.avatar || 'U';
+        document.getElementById('userName').textContent = user.name || 'User';
+        document.getElementById('userRole').textContent = user.title || user.role || 'User';
+        if (user.role === 'manager' || user.role === 'senior_recruiter' || user.role === 'admin') {
+            document.getElementById('teamNav').classList.remove('hidden');
+        }
+        
+        // Load clients
+        let clients = JSON.parse(localStorage.getItem('trm_clients') || '[]');
+        
+        function renderClients(filteredClients = clients) {
+            const grid = document.getElementById('clientsGrid');
+            grid.innerHTML = '';
+            
+            filteredClients.forEach(client => {
+                const statusClass = client.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600';
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden border-0 hover:shadow-xl transition-all">
+                        <div class="h-24 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 relative">
+                            <div class="absolute -bottom-8 left-5">
+                                <div class="h-16 w-16 rounded-2xl bg-white shadow-lg flex items-center justify-center text-xl font-bold bg-gradient-to-br from-blue-500 to-indigo-600 text-white">
+                                    ${client.name.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-12 pb-5 px-5">
+                            <div class="flex items-start justify-between mb-3">
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-lg">${client.name}</h3>
+                                    <p class="text-sm text-slate-500">${client.industry}</p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-medium ${statusClass}">${client.status}</span>
+                            </div>
+                            <div class="space-y-2 text-sm text-slate-600 mb-4">
+                                <div class="flex items-center gap-2">
+                                    <div class="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                    </div>
+                                    <span class="truncate">${client.email}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    </div>
+                                    <span>${client.city}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                <div class="flex gap-4">
+                                    <div class="text-center">
+                                        <p class="text-xl font-bold text-slate-800">${client.jobs}</p>
+                                        <p class="text-xs text-slate-400">Jobs</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-xl font-bold text-green-600">${client.placements}</p>
+                                        <p class="text-xs text-slate-400">Placements</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editClient(${client.id})" class="h-9 px-3 text-blue-600 hover:bg-blue-50 rounded-lg text-sm font-medium transition-colors">Edit</button>
+                                    <button onclick="deleteClient(${client.id})" class="h-9 px-3 text-red-600 hover:bg-red-50 rounded-lg text-sm font-medium transition-colors">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Update stats
+            document.getElementById('statTotal').textContent = clients.length;
+            document.getElementById('statActive').textContent = clients.filter(c => c.status === 'active').length;
+            document.getElementById('statValue').textContent = `K ${(clients.reduce((s, c) => s + c.totalValue, 0) / 1000000).toFixed(0)}M`;
+            document.getElementById('statPlacements').textContent = clients.reduce((s, c) => s + c.placements, 0);
+        }
+        
+        function filterClients() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const industry = document.getElementById('industryFilter').value;
+            
+            const filtered = clients.filter(c => {
+                const matchSearch = c.name.toLowerCase().includes(search) || c.contact.toLowerCase().includes(search) || c.email.toLowerCase().includes(search);
+                const matchStatus = !status || c.status === status;
+                const matchIndustry = !industry || c.industry === industry;
+                return matchSearch && matchStatus && matchIndustry;
+            });
+            
+            renderClients(filtered);
+        }
+        
+        function openModal(client = null) {
+            document.getElementById('clientModal').classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = client ? 'Edit Client' : 'Add New Client';
+            document.getElementById('clientForm').reset();
+            
+            if (client) {
+                document.getElementById('clientId').value = client.id;
+                document.getElementById('clientName').value = client.name;
+                document.getElementById('clientIndustry').value = client.industry;
+                document.getElementById('clientStatus').value = client.status;
+                document.getElementById('clientContact').value = client.contact;
+                document.getElementById('clientEmail').value = client.email;
+                document.getElementById('clientPhone').value = client.phone || '';
+                document.getElementById('clientCity').value = client.city || 'Yangon';
+                document.getElementById('clientAddress').value = client.address || '';
+                document.getElementById('clientNotes').value = client.notes || '';
+            } else {
+                document.getElementById('clientId').value = '';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('clientModal').classList.add('hidden');
+        }
+        
+        function editClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (client) openModal(client);
+        }
+        
+        function deleteClient(id) {
+            if (confirm('Are you sure you want to delete this client?')) {
+                clients = clients.filter(c => c.id !== id);
+                localStorage.setItem('trm_clients', JSON.stringify(clients));
+                renderClients();
+            }
+        }
+        
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('clientId').value;
+            const clientData = {
+                id: id ? parseInt(id) : Date.now(),
+                name: document.getElementById('clientName').value,
+                industry: document.getElementById('clientIndustry').value,
+                status: document.getElementById('clientStatus').value,
+                contact: document.getElementById('clientContact').value,
+                email: document.getElementById('clientEmail').value,
+                phone: document.getElementById('clientPhone').value,
+                city: document.getElementById('clientCity').value,
+                address: document.getElementById('clientAddress').value,
+                notes: document.getElementById('clientNotes').value,
+                jobs: 0,
+                placements: 0,
+                totalValue: 0,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+            
+            if (id) {
+                const existing = clients.find(c => c.id === parseInt(id));
+                clientData.jobs = existing.jobs;
+                clientData.placements = existing.placements;
+                clientData.totalValue = existing.totalValue;
+                clientData.createdAt = existing.createdAt;
+                clients = clients.map(c => c.id === parseInt(id) ? clientData : c);
+            } else {
+                clients.unshift(clientData);
+            }
+            
+            localStorage.setItem('trm_clients', JSON.stringify(clients));
+            closeModal();
+            renderClients();
+        });
+        
+        // Initial render
+        renderClients();
+    </script>
+</body>
+</html>

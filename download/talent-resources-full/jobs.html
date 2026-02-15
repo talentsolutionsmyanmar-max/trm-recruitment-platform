@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Resources Myanmar - Job Orders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>* { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-gradient-to-b from-slate-900 to-slate-800 text-white flex flex-col fixed h-full z-50">
+            <div class="h-20 flex items-center gap-3 px-6 border-b border-slate-700/50">
+                <div class="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white">Talent Resources</h1>
+                    <p class="text-xs text-blue-300">Myanmar</p>
+                </div>
+            </div>
+            <nav class="flex-1 px-3 py-6 overflow-y-auto">
+                <p class="px-3 mb-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Main Menu</p>
+                <a href="dashboard.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/></svg>
+                    Dashboard
+                </a>
+                <a href="clients.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"/></svg>
+                    Clients
+                </a>
+                <a href="jobs.html" class="flex items-center gap-3 rounded-xl px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    Job Orders
+                </a>
+                <a href="pipeline.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2"/></svg>
+                    Pipeline
+                </a>
+                <a href="candidates.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Candidates
+                </a>
+                <a href="interviews.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Interviews
+                </a>
+                <a href="public-jobs.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                    Public Portal
+                </a>
+                <div id="teamNav" class="hidden">
+                    <p class="px-3 mt-6 mb-3 text-xs font-semibold text-slate-500 uppercase">Management</p>
+                    <a href="team.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Team
+                    </a>
+                    <a href="reports.html" class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 hover:bg-slate-800 mb-1 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z"/></svg>
+                        Reports
+                    </a>
+                </div>
+            </nav>
+            <div class="border-t border-slate-700/50 p-4">
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/50">
+                    <div id="userAvatar" class="h-11 w-11 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center font-semibold shadow-lg text-white text-sm"></div>
+                    <div class="flex-1 min-w-0">
+                        <p id="userName" class="text-sm font-semibold text-white truncate"></p>
+                        <p id="userRole" class="text-xs text-slate-400 truncate"></p>
+                    </div>
+                    <a href="login.html" class="h-8 w-8 rounded-lg hover:bg-slate-700 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main -->
+        <main class="flex-1 ml-72">
+            <header class="h-20 border-b bg-white/90 backdrop-blur-sm px-8 flex items-center justify-between sticky top-0 z-40">
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Job Orders</h1>
+                    <p class="text-sm text-slate-500">Manage and publish job openings</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="public-jobs.html" class="h-11 px-5 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                        View Public Portal
+                    </a>
+                    <button onclick="openJobModal()" class="h-11 px-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 flex items-center gap-2 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Create Job Order
+                    </button>
+                </div>
+            </header>
+            
+            <div class="p-8">
+                <!-- Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-blue-100 text-sm font-medium">Total Jobs</p>
+                                <p id="statTotal" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-green-100 text-sm font-medium">Active</p>
+                                <p id="statActive" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-orange-500 to-amber-600 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-orange-100 text-sm font-medium">Open Positions</p>
+                                <p id="statPositions" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white shadow-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-purple-100 text-sm font-medium">Placements</p>
+                                <p id="statPlacements" class="text-3xl font-bold mt-1">0</p>
+                            </div>
+                            <svg class="w-10 h-10 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex-1 min-w-64">
+                            <div class="relative">
+                                <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                <input type="text" id="searchInput" onkeyup="filterJobs()" placeholder="Search jobs..." class="w-full pl-12 h-11 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 outline-none text-sm">
+                            </div>
+                        </div>
+                        <select id="statusFilter" onchange="filterJobs()" class="h-11 px-4 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm">
+                            <option value="">All Status</option>
+                            <option value="open">Open</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="filled">Filled</option>
+                        </select>
+                        <select id="priorityFilter" onchange="filterJobs()" class="h-11 px-4 bg-slate-50 border border-slate-200 rounded-xl outline-none text-sm">
+                            <option value="">All Priority</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Jobs Grid -->
+                <div id="jobsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Job Modal -->
+    <div id="jobModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                <h2 id="modalTitle" class="text-xl font-bold text-slate-800">Create Job Order</h2>
+                <button onclick="closeModal()" class="h-10 w-10 rounded-lg hover:bg-slate-100 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <form id="jobForm" class="p-6 space-y-4">
+                <input type="hidden" id="jobId">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Job Title *</label>
+                        <input type="text" id="jobTitle" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Client *</label>
+                        <select id="jobClient" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Priority</label>
+                        <select id="jobPriority" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm">
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Salary Min (MMK)</label>
+                        <input type="number" id="jobSalaryMin" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm" placeholder="e.g. 300000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Salary Max (MMK)</label>
+                        <input type="number" id="jobSalaryMax" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm" placeholder="e.g. 500000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Quantity</label>
+                        <input type="number" id="jobQuantity" value="1" min="1" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Deadline</label>
+                        <input type="date" id="jobDeadline" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Location</label>
+                        <input type="text" id="jobLocation" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm" placeholder="e.g. Yangon - Hlaing Tharyar">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                        <textarea id="jobDescription" rows="2" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm resize-none"></textarea>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Requirements</label>
+                        <textarea id="jobRequirements" rows="2" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 outline-none text-sm resize-none"></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="h-11 px-6 border border-slate-200 text-slate-600 font-medium rounded-xl hover:bg-slate-50 transition-colors text-sm">Cancel</button>
+                    <button type="submit" class="h-11 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg text-sm">Save Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Share Modal -->
+    <div id="shareModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-slate-800">Share Job</h2>
+                <button onclick="closeShareModal()" class="h-10 w-10 rounded-lg hover:bg-slate-100 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <p id="shareJobTitle" class="text-slate-600 mb-6 text-sm"></p>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="shareToLinkedIn()" class="p-4 rounded-xl border border-slate-200 hover:bg-blue-50 hover:border-blue-200 transition-all flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-xl bg-[#0077B5] flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.06.925 2.06 2.063 0 1.139-.92 2.065-2.06 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </div>
+                    <span class="font-medium text-slate-700 text-sm">LinkedIn</span>
+                    <span class="text-xs text-slate-500">Professional network</span>
+                </button>
+                <button onclick="shareToFacebook()" class="p-4 rounded-xl border border-slate-200 hover:bg-blue-50 hover:border-blue-200 transition-all flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-xl bg-[#1877F2] flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </div>
+                    <span class="font-medium text-slate-700 text-sm">Facebook</span>
+                    <span class="text-xs text-slate-500">Largest network</span>
+                </button>
+                <button onclick="shareToTwitter()" class="p-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-xl bg-black flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </div>
+                    <span class="font-medium text-slate-700 text-sm">X (Twitter)</span>
+                    <span class="text-xs text-slate-500">Quick share</span>
+                </button>
+                <button onclick="shareToWhatsApp()" class="p-4 rounded-xl border border-slate-200 hover:bg-green-50 hover:border-green-200 transition-all flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 rounded-xl bg-[#25D366] flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </div>
+                    <span class="font-medium text-slate-700 text-sm">WhatsApp</span>
+                    <span class="text-xs text-slate-500">Direct message</span>
+                </button>
+            </div>
+            <div class="bg-slate-50 rounded-xl p-4">
+                <label class="block text-sm font-medium text-slate-600 mb-2">Copy Link</label>
+                <div class="flex gap-2">
+                    <input type="text" id="shareLink" readonly class="flex-1 px-4 py-2 rounded-lg bg-white border border-slate-200 text-sm text-slate-600">
+                    <button onclick="copyLink()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">Copy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('trm_currentUser') || '{}');
+        if (!user.id && user.role !== 'admin') window.location.href = 'login.html';
+        
+        document.getElementById('userAvatar').textContent = user.avatar || 'U';
+        document.getElementById('userName').textContent = user.name || 'User';
+        document.getElementById('userRole').textContent = user.title || user.role || 'User';
+        if (user.role === 'manager' || user.role === 'senior_recruiter' || user.role === 'admin') {
+            document.getElementById('teamNav').classList.remove('hidden');
+        }
+        
+        let jobs = JSON.parse(localStorage.getItem('trm_jobs') || '[]');
+        let clients = JSON.parse(localStorage.getItem('trm_clients') || '[]');
+        let currentShareJob = null;
+        
+        // Populate client dropdown
+        const clientSelect = document.getElementById('jobClient');
+        clients.forEach(c => {
+            clientSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
+        
+        function renderJobs(filtered = jobs) {
+            const grid = document.getElementById('jobsGrid');
+            grid.innerHTML = '';
+            
+            filtered.forEach(job => {
+                const progress = Math.round((job.filled / job.quantity) * 100);
+                const priorityColors = { high: 'bg-red-100 text-red-700', medium: 'bg-yellow-100 text-yellow-700', low: 'bg-green-100 text-green-700' };
+                const statusColors = { 'open': 'bg-blue-100 text-blue-700', 'in-progress': 'bg-orange-100 text-orange-700', 'filled': 'bg-green-100 text-green-700', 'closed': 'bg-slate-100 text-slate-600' };
+                
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all">
+                        <div class="p-6">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-slate-800">${job.title}</h3>
+                                    <p class="text-sm text-slate-500 mt-1">${job.clientName}</p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-medium ${statusColors[job.status] || 'bg-slate-100'}">${job.status}</span>
+                            </div>
+                            
+                            <div class="space-y-2 text-sm text-slate-600 mb-4">
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                    ${job.location}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1"/></svg>
+                                    K ${job.salaryMin?.toLocaleString() || 'N/A'} - K ${job.salaryMax?.toLocaleString() || 'N/A'}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-slate-600">${job.filled}/${job.quantity} filled</span>
+                                    <span class="font-medium text-slate-700">${progress}%</span>
+                                </div>
+                                <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all" style="width:${progress}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between pt-4 border-t">
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 rounded-full text-xs font-medium ${priorityColors[job.priority]}">${job.priority} priority</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2 mt-4">
+                                <button onclick="openShareModal(${job.id})" class="flex-1 h-9 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-indigo-700 flex items-center justify-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                                    Share
+                                </button>
+                                <button onclick="editJob(${job.id})" class="h-9 px-4 border border-slate-200 text-slate-600 rounded-lg text-sm font-medium hover:bg-slate-50">Edit</button>
+                                <button onclick="deleteJob(${job.id})" class="h-9 px-3 border border-red-200 text-red-600 rounded-lg text-sm hover:bg-red-50">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('statTotal').textContent = jobs.length;
+            document.getElementById('statActive').textContent = jobs.filter(j => j.status === 'open' || j.status === 'in-progress').length;
+            document.getElementById('statPositions').textContent = jobs.filter(j => j.status !== 'filled').reduce((s, j) => s + (j.quantity - j.filled), 0);
+            document.getElementById('statPlacements').textContent = jobs.reduce((s, j) => s + j.filled, 0);
+        }
+        
+        function filterJobs() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const priority = document.getElementById('priorityFilter').value;
+            
+            const filtered = jobs.filter(j => {
+                const matchSearch = j.title.toLowerCase().includes(search) || j.clientName.toLowerCase().includes(search);
+                const matchStatus = !status || j.status === status;
+                const matchPriority = !priority || j.priority === priority;
+                return matchSearch && matchStatus && matchPriority;
+            });
+            renderJobs(filtered);
+        }
+        
+        function openJobModal(job = null) {
+            document.getElementById('jobModal').classList.remove('hidden');
+            document.getElementById('modalTitle').textContent = job ? 'Edit Job Order' : 'Create Job Order';
+            document.getElementById('jobForm').reset();
+            if (job) {
+                document.getElementById('jobId').value = job.id;
+                document.getElementById('jobTitle').value = job.title;
+                document.getElementById('jobClient').value = job.clientId;
+                document.getElementById('jobPriority').value = job.priority;
+                document.getElementById('jobSalaryMin').value = job.salaryMin || '';
+                document.getElementById('jobSalaryMax').value = job.salaryMax || '';
+                document.getElementById('jobQuantity').value = job.quantity;
+                document.getElementById('jobDeadline').value = job.deadline || '';
+                document.getElementById('jobLocation').value = job.location || '';
+                document.getElementById('jobDescription').value = job.description || '';
+                document.getElementById('jobRequirements').value = job.requirements || '';
+            } else {
+                document.getElementById('jobId').value = '';
+            }
+        }
+        
+        function closeModal() { document.getElementById('jobModal').classList.add('hidden'); }
+        
+        function editJob(id) {
+            const job = jobs.find(j => j.id === id);
+            if (job) openJobModal(job);
+        }
+        
+        function deleteJob(id) {
+            if (confirm('Delete this job?')) {
+                jobs = jobs.filter(j => j.id !== id);
+                localStorage.setItem('trm_jobs', JSON.stringify(jobs));
+                renderJobs();
+            }
+        }
+        
+        function openShareModal(id) {
+            currentShareJob = jobs.find(j => j.id === id);
+            if (!currentShareJob) return;
+            document.getElementById('shareModal').classList.remove('hidden');
+            document.getElementById('shareJobTitle').textContent = currentShareJob.title + ' - ' + currentShareJob.clientName;
+            document.getElementById('shareLink').value = window.location.origin + '/public-jobs.html?id=' + currentShareJob.id;
+        }
+        
+        function closeShareModal() { document.getElementById('shareModal').classList.add('hidden'); }
+        
+        function shareToLinkedIn() {
+            const url = encodeURIComponent(document.getElementById('shareLink').value);
+            const title = encodeURIComponent(currentShareJob.title);
+            window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank');
+        }
+        
+        function shareToFacebook() {
+            const url = encodeURIComponent(document.getElementById('shareLink').value);
+            window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank');
+        }
+        
+        function shareToTwitter() {
+            const url = encodeURIComponent(document.getElementById('shareLink').value);
+            const text = encodeURIComponent('We are hiring! ' + currentShareJob.title + ' at ' + currentShareJob.clientName);
+            window.open('https://twitter.com/intent/tweet?url=' + url + '&text=' + text, '_blank');
+        }
+        
+        function shareToWhatsApp() {
+            const text = encodeURIComponent('We are hiring!\n\n' + currentShareJob.title + '\n' + currentShareJob.clientName + '\n\nApply: ' + document.getElementById('shareLink').value);
+            window.open('https://wa.me/?text=' + text, '_blank');
+        }
+        
+        function copyLink() {
+            const input = document.getElementById('shareLink');
+            input.select();
+            document.execCommand('copy');
+            alert('Link copied!');
+        }
+        
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('jobId').value;
+            const clientId = document.getElementById('jobClient').value;
+            const client = clients.find(c => c.id == clientId);
+            
+            const jobData = {
+                id: id ? parseInt(id) : Date.now(),
+                title: document.getElementById('jobTitle').value,
+                clientId: clientId,
+                clientName: client?.name || '',
+                location: document.getElementById('jobLocation').value,
+                salaryMin: parseInt(document.getElementById('jobSalaryMin').value) || 0,
+                salaryMax: parseInt(document.getElementById('jobSalaryMax').value) || 0,
+                quantity: parseInt(document.getElementById('jobQuantity').value) || 1,
+                filled: 0,
+                priority: document.getElementById('jobPriority').value,
+                status: 'open',
+                deadline: document.getElementById('jobDeadline').value,
+                description: document.getElementById('jobDescription').value,
+                requirements: document.getElementById('jobRequirements').value,
+                recruiterId: user.id,
+                createdAt: new Date().toISOString().split('T')[0],
+                postedTo: []
+            };
+            
+            if (id) {
+                const existing = jobs.find(j => j.id === parseInt(id));
+                jobData.filled = existing?.filled || 0;
+                jobData.status = existing?.status || 'open';
+                jobData.postedTo = existing?.postedTo || [];
+                jobs = jobs.map(j => j.id === parseInt(id) ? jobData : j);
+            } else {
+                jobs.unshift(jobData);
+            }
+            
+            localStorage.setItem('trm_jobs', JSON.stringify(jobs));
+            closeModal();
+            renderJobs();
+        });
+        
+        renderJobs();
+    </script>
+</body>
+</html>

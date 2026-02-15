@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Resources Myanmar - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%); }
+        .glass { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg flex items-center justify-center p-4 relative overflow-hidden">
+    <!-- Background decoration -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="glass rounded-3xl shadow-2xl p-10 w-full max-w-md relative z-10">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-2xl shadow-blue-500/30 mx-auto mb-5 animate-float">
+                <svg class="w-11 h-11 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Talent Resources</h1>
+            <p class="text-slate-500 mt-1">Myanmar Recruitment Platform</p>
+            <p class="text-xs text-blue-600 mt-2 font-medium">Enterprise Edition</p>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-5">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2">Select Your Role</label>
+                <select id="role" class="w-full px-4 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white text-slate-700 text-sm shadow-sm">
+                    <option value="manager">Managing Director</option>
+                    <option value="senior_recruiter">Senior Recruiter</option>
+                    <option value="recruiter">Recruiter</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                </svg>
+                Sign In to Platform
+            </button>
+        </form>
+        
+        <!-- Role Info -->
+        <div class="mt-8 p-5 bg-gradient-to-br from-slate-50 to-blue-50 rounded-xl border border-slate-100">
+            <p class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-2">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Access Permissions
+            </p>
+            <div class="space-y-2 text-xs text-slate-600">
+                <div class="flex items-start gap-2 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                    <div class="h-5 w-5 rounded bg-purple-100 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span><strong class="text-slate-700">Managing Director:</strong> Full access, team management, reports, billing</span>
+                </div>
+                <div class="flex items-start gap-2 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                    <div class="h-5 w-5 rounded bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span><strong class="text-slate-700">Senior Recruiter:</strong> Team oversight, job posting, client management</span>
+                </div>
+                <div class="flex items-start gap-2 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                    <div class="h-5 w-5 rounded bg-green-100 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span><strong class="text-slate-700">Recruiter:</strong> Personal pipeline, candidate management, job assignments</span>
+                </div>
+                <div class="flex items-start gap-2 p-2 rounded-lg hover:bg-white/50 transition-colors">
+                    <div class="h-5 w-5 rounded bg-orange-100 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-3 h-3 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span><strong class="text-slate-700">Administrator:</strong> System configuration, user management, settings</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features -->
+        <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+            <div class="p-3 bg-slate-50 rounded-xl">
+                <svg class="w-6 h-6 text-blue-500 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                <p class="text-xs text-slate-600">Social Share</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl">
+                <svg class="w-6 h-6 text-green-500 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <p class="text-xs text-slate-600">Analytics</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl">
+                <svg class="w-6 h-6 text-purple-500 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <p class="text-xs text-slate-600">Team Work</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function initDemoData() {
+            if (!localStorage.getItem('trm_initialized')) {
+                const team = [
+                    { id: 1, name: 'Daw Mya Thein', email: 'manager@talentresources.mm', role: 'manager', title: 'Managing Director', department: 'Executive', target: 50000000, achieved: 45000000, placements: 45, commission: 2250000, avatar: 'DM', status: 'active', phone: '+959123000001', joinDate: '2020-01-15' },
+                    { id: 2, name: 'U Thant Zin', email: 'thant@talentresources.mm', role: 'senior_recruiter', title: 'Senior Recruiter', department: 'Corporate', target: 30000000, achieved: 28000000, placements: 32, commission: 1400000, avatar: 'TZ', status: 'active', phone: '+959123000002', joinDate: '2021-03-20', managerId: 1 },
+                    { id: 3, name: 'Ma Khin Hlaing', email: 'khin@talentresources.mm', role: 'recruiter', title: 'Recruiter', department: 'Corporate', target: 20000000, achieved: 15000000, placements: 18, commission: 750000, avatar: 'MK', status: 'active', phone: '+959123000003', joinDate: '2022-06-10', managerId: 2 },
+                    { id: 4, name: 'Ko Aung Min', email: 'aung@talentresources.mm', role: 'recruiter', title: 'Recruiter', department: 'Manufacturing', target: 20000000, achieved: 22000000, placements: 28, commission: 1100000, avatar: 'KA', status: 'active', phone: '+959123000004', joinDate: '2022-08-15', managerId: 1 },
+                    { id: 5, name: 'Daw Su Myat', email: 'su@talentresources.mm', role: 'recruiter', title: 'Junior Recruiter', department: 'Manufacturing', target: 15000000, achieved: 8000000, placements: 12, commission: 400000, avatar: 'DS', status: 'active', phone: '+959123000005', joinDate: '2023-01-10', managerId: 4 }
+                ];
+                
+                const clients = [
+                    { id: 1, name: 'Myanmar Golden Star Beverage Co., Ltd.', industry: 'Food & Beverage', contact: 'U Thant Zin', email: 'thant@mgsbeverage.mm', phone: '+959123456789', city: 'Yangon', address: 'Industrial Zone 1, Hlaing Tharyar', status: 'active', jobs: 12, placements: 45, totalValue: 15000000, createdAt: '2024-01-15', logo: 'MGS' },
+                    { id: 2, name: 'Shwe Taung Development Group', industry: 'Construction', contact: 'Daw Mya Mya', email: 'mya@shwetaunggroup.mm', phone: '+959234567890', city: 'Yangon', address: 'Kabar Aye Pagoda Road, Bahan', status: 'active', jobs: 8, placements: 32, totalValue: 25000000, createdAt: '2024-02-20', logo: 'STD' },
+                    { id: 3, name: 'Parami Energy Services', industry: 'Energy & Power', contact: 'U Kyaw Soe', email: 'kyaw@paramienergy.mm', phone: '+959345678901', city: 'Yangon', address: 'Pyay Road, Kamayut', status: 'active', jobs: 5, placements: 18, totalValue: 18000000, createdAt: '2024-03-10', logo: 'PES' },
+                    { id: 4, name: 'Mandalay Garment Factory', industry: 'Textile & Garment', contact: 'Daw Khin Khin', email: 'khin@mandalaygarment.mm', phone: '+959456789012', city: 'Mandalay', address: 'Industrial Zone, Chan Mya Thar Zi', status: 'active', jobs: 15, placements: 120, totalValue: 8000000, createdAt: '2024-01-25', logo: 'MGF' },
+                    { id: 5, name: 'KBZ Bank Limited', industry: 'Banking & Finance', contact: 'U Aung Ko', email: 'aung@kbzbank.mm', phone: '+959789012345', city: 'Yangon', address: 'Merchant Street, Kyauktada', status: 'active', jobs: 20, placements: 65, totalValue: 12000000, createdAt: '2023-12-01', logo: 'KBZ' },
+                    { id: 6, name: 'Grand Myanmar Hotel Group', industry: 'Hospitality & Tourism', contact: 'U Myo Aung', email: 'myo@grandmyanmarhotel.mm', phone: '+959567890123', city: 'Yangon', address: 'Strand Road, Kyauktada', status: 'active', jobs: 10, placements: 28, totalValue: 5000000, createdAt: '2024-02-05', logo: 'GMH' }
+                ];
+                
+                const jobs = [
+                    { id: 1, title: 'Production Line Worker', clientId: 1, clientName: 'Myanmar Golden Star Beverage', location: 'Yangon - Hlaing Tharyar', salaryMin: 250000, salaryMax: 350000, quantity: 20, filled: 15, priority: 'high', status: 'in-progress', deadline: '2025-01-15', recruiterId: 2, createdAt: '2024-12-01', description: 'Operate production machinery in beverage manufacturing facility', requirements: 'No experience required. Physical fitness needed. 12-hour shift rotation.', postedTo: ['linkedin', 'facebook'] },
+                    { id: 2, title: 'Construction Worker', clientId: 2, clientName: 'Shwe Taung Development Group', location: 'Yangon - Thanlyin', salaryMin: 300000, salaryMax: 400000, quantity: 50, filled: 32, priority: 'high', status: 'in-progress', deadline: '2025-02-01', recruiterId: 3, createdAt: '2024-12-05', description: 'General construction work for large commercial project', requirements: 'Experience in construction preferred. Must have safety awareness.', postedTo: ['facebook'] },
+                    { id: 3, title: 'Electrical Engineer', clientId: 3, clientName: 'Parami Energy Services', location: 'Yangon', salaryMin: 800000, salaryMax: 1200000, quantity: 3, filled: 1, priority: 'medium', status: 'in-progress', deadline: '2025-02-15', recruiterId: 2, createdAt: '2024-12-08', description: 'Design and supervise electrical systems for energy projects', requirements: 'B.E. in Electrical Engineering. 3+ years experience. Field work required.', postedTo: ['linkedin'] },
+                    { id: 4, title: 'Garment Factory Worker', clientId: 4, clientName: 'Mandalay Garment Factory', location: 'Mandalay', salaryMin: 200000, salaryMax: 280000, quantity: 100, filled: 75, priority: 'high', status: 'in-progress', deadline: '2025-01-30', recruiterId: 4, createdAt: '2024-12-10', description: 'Sewing and garment production in large factory', requirements: 'No experience required. Training provided.', postedTo: ['facebook'] },
+                    { id: 5, title: 'Bank Teller', clientId: 5, clientName: 'KBZ Bank Limited', location: 'Yangon - Multiple Branches', salaryMin: 400000, salaryMax: 550000, quantity: 10, filled: 6, priority: 'medium', status: 'in-progress', deadline: '2025-01-30', recruiterId: 3, createdAt: '2024-12-12', description: 'Customer service and cash handling at bank branches', requirements: 'University graduate. Basic English. Cash handling experience preferred.', postedTo: ['linkedin', 'facebook'] },
+                    { id: 6, title: 'Sales Executive', clientId: 1, clientName: 'Myanmar Golden Star Beverage', location: 'Yangon', salaryMin: 400000, salaryMax: 600000, quantity: 8, filled: 0, priority: 'high', status: 'open', deadline: '2025-01-20', recruiterId: 5, createdAt: '2024-12-15', description: 'FMCG sales and distributor management', requirements: 'Sales experience in FMCG. Own motorcycle. Good communication skills.', postedTo: [] },
+                    { id: 7, title: 'HR Manager', clientId: 5, clientName: 'KBZ Bank Limited', location: 'Yangon', salaryMin: 1500000, salaryMax: 2500000, quantity: 1, filled: 0, priority: 'high', status: 'open', deadline: '2025-02-28', recruiterId: 2, createdAt: '2024-12-20', description: 'Lead HR operations for bank branch network', requirements: 'MBA or HR certification. 5+ years HR experience in banking.', postedTo: ['linkedin'] },
+                    { id: 8, title: 'Software Developer', clientId: 5, clientName: 'KBZ Bank Limited', location: 'Yangon', salaryMin: 1200000, salaryMax: 2000000, quantity: 5, filled: 0, priority: 'medium', status: 'open', deadline: '2025-03-15', recruiterId: 2, createdAt: '2024-12-22', description: 'Develop and maintain banking applications', requirements: 'BSc Computer Science. Experience with Java, Python, or .NET.', postedTo: ['linkedin'] }
+                ];
+                
+                const candidates = [
+                    { id: 1, name: 'Mg Aung', email: 'mgaung@gmail.com', phone: '+959111222333', location: 'Yangon - Hlaing Tharyar', skills: ['Factory Work', 'Machine Operation', 'Quality Control'], experience: 5, education: 'High School Graduate', currentCompany: 'Unemployed', expectedSalary: 300000, status: 'available', appliedJobs: [1], recruiterId: 2, createdAt: '2024-12-01', source: 'Walk-in' },
+                    { id: 2, name: 'Ma Hla Hla', email: 'hla@gmail.com', phone: '+959222333444', location: 'Mandalay', skills: ['Sewing', 'Garment Production', 'Quality Inspection'], experience: 3, education: 'Middle School', currentCompany: 'ABC Garment', expectedSalary: 250000, status: 'available', appliedJobs: [4], recruiterId: 4, createdAt: '2024-12-05', source: 'Referral' },
+                    { id: 3, name: 'U Thein Tun', email: 'thein@gmail.com', phone: '+959333444555', location: 'Yangon - South Dagon', skills: ['Construction', 'Masonry', 'Concrete Work'], experience: 10, education: 'Primary School', currentCompany: 'Freelance', expectedSalary: 400000, status: 'available', appliedJobs: [2], recruiterId: 3, createdAt: '2024-12-08', source: 'Job Fair' },
+                    { id: 4, name: 'Daw Mya Mya', email: 'myamya@gmail.com', phone: '+959444555666', location: 'Yangon - Kamayut', skills: ['Customer Service', 'English Communication', 'MS Office'], experience: 4, education: 'BA English', currentCompany: 'XYZ Trading', expectedSalary: 500000, status: 'available', appliedJobs: [3, 5], recruiterId: 2, createdAt: '2024-12-10', source: 'LinkedIn' },
+                    { id: 5, name: 'Mg Zaw Zaw', email: 'zaw@gmail.com', phone: '+959555666777', location: 'Yangon - Insein', skills: ['Electrical Installation', 'Troubleshooting', 'AutoCAD'], experience: 7, education: 'B.E. Electrical Engineering', currentCompany: 'Power Solutions Co.', expectedSalary: 1000000, status: 'available', appliedJobs: [3], recruiterId: 2, createdAt: '2024-12-12', source: 'Website' },
+                    { id: 6, name: 'Ma Su Su', email: 'susu@gmail.com', phone: '+959666777888', location: 'Yangon - Tamwe', skills: ['Banking Operations', 'Customer Service', 'Cash Handling'], experience: 2, education: 'B.Com', currentCompany: 'CB Bank', expectedSalary: 450000, status: 'available', appliedJobs: [5], recruiterId: 3, createdAt: '2024-12-14', source: 'Referral' },
+                    { id: 7, name: 'Ko Min Htet', email: 'minhtet@gmail.com', phone: '+959777888999', location: 'Yangon - Bahan', skills: ['Java', 'Python', 'React', 'Database'], experience: 4, education: 'BSc Computer Science', currentCompany: 'Tech Solutions', expectedSalary: 1500000, status: 'available', appliedJobs: [8], recruiterId: 2, createdAt: '2024-12-20', source: 'LinkedIn' },
+                    { id: 8, name: 'Daw Tin Tin', email: 'tintin@gmail.com', phone: '+959888999000', location: 'Yangon - Latha', skills: ['HR Management', 'Payroll', 'Recruitment', 'Labor Law'], experience: 8, education: 'MBA', currentCompany: 'Global Trading', expectedSalary: 2000000, status: 'available', appliedJobs: [7], recruiterId: 2, createdAt: '2024-12-22', source: 'LinkedIn' }
+                ];
+                
+                const deals = [
+                    { id: 1, title: 'MGS Annual Staffing Contract', clientId: 1, clientName: 'Myanmar Golden Star Beverage', value: 15000000, stage: 'negotiation', probability: 75, expectedClose: '2025-01-30', recruiterId: 2, notes: 'Annual contract for factory workers and sales staff placement.', createdAt: '2024-11-15' },
+                    { id: 2, title: 'Shwe Taung Construction Project', clientId: 2, clientName: 'Shwe Taung Development Group', value: 25000000, stage: 'proposal', probability: 50, expectedClose: '2025-02-15', recruiterId: 1, notes: 'Large construction project requiring 200+ workers.', createdAt: '2024-12-01' },
+                    { id: 3, title: 'Mandalay Garment Expansion', clientId: 4, clientName: 'Mandalay Garment Factory', value: 8000000, stage: 'won', probability: 100, expectedClose: '2024-12-15', recruiterId: 4, notes: 'Won - 100 garment workers placement completed.', createdAt: '2024-11-01' },
+                    { id: 4, title: 'KBZ Bank Teller Recruitment', clientId: 5, clientName: 'KBZ Bank Limited', value: 12000000, stage: 'qualified', probability: 40, expectedClose: '2025-02-28', recruiterId: 3, notes: 'Ongoing requirement for tellers and customer service.', createdAt: '2024-12-05' },
+                    { id: 5, title: 'Parami Energy Technical Staffing', clientId: 3, clientName: 'Parami Energy Services', value: 18000000, stage: 'proposal', probability: 60, expectedClose: '2025-02-28', recruiterId: 2, notes: 'Technical and engineering positions for energy projects.', createdAt: '2024-11-25' },
+                    { id: 6, title: 'KBZ IT Recruitment Drive', clientId: 5, clientName: 'KBZ Bank Limited', value: 25000000, stage: 'lead', probability: 20, expectedClose: '2025-04-30', recruiterId: 2, notes: 'Large IT recruitment project for digital transformation.', createdAt: '2024-12-20' }
+                ];
+                
+                const interviews = [
+                    { id: 1, candidateId: 1, candidateName: 'Mg Aung', candidatePhone: '+959111222333', jobId: 1, jobTitle: 'Production Line Worker', clientName: 'MGS Beverage', date: '2025-02-15', time: '10:00', type: 'First Interview', status: 'scheduled', recruiterId: 2, location: 'Client Office - Hlaing Tharyar', notes: 'Bring NRC and education certificates' },
+                    { id: 2, candidateId: 3, candidateName: 'U Thein Tun', candidatePhone: '+959333444555', jobId: 2, jobTitle: 'Construction Worker', clientName: 'Shwe Taung', date: '2025-02-15', time: '14:00', type: 'Skills Test', status: 'scheduled', recruiterId: 3, location: 'Construction Site - Thanlyin', notes: 'Practical skills assessment' },
+                    { id: 3, candidateId: 5, candidateName: 'Mg Zaw Zaw', candidatePhone: '+959555666777', jobId: 3, jobTitle: 'Electrical Engineer', clientName: 'Parami Energy', date: '2025-02-16', time: '09:30', type: 'Technical Interview', status: 'scheduled', recruiterId: 2, location: 'Parami Office - Kamayut', notes: 'Technical presentation required' },
+                    { id: 4, candidateId: 7, candidateName: 'Ko Min Htet', candidatePhone: '+959777888999', jobId: 8, jobTitle: 'Software Developer', clientName: 'KBZ Bank', date: '2025-02-17', time: '10:00', type: 'Technical Interview', status: 'scheduled', recruiterId: 2, location: 'KBZ IT Office - Online', notes: 'Coding test will be conducted' },
+                    { id: 5, candidateId: 8, candidateName: 'Daw Tin Tin', candidatePhone: '+959888999000', jobId: 7, jobTitle: 'HR Manager', clientName: 'KBZ Bank', date: '2025-02-18', time: '14:30', type: 'Final Interview', status: 'scheduled', recruiterId: 2, location: 'KBZ Head Office - Yangon', notes: 'Meeting with HR Director' }
+                ];
+                
+                const activities = [
+                    { id: 1, type: 'placement', title: 'Placement Completed', desc: 'Mg Aung placed at MGS Beverage as Production Line Worker', client: 'MGS Beverage', time: new Date(Date.now() - 2*3600000).toISOString(), recruiterId: 2 },
+                    { id: 2, type: 'call', title: 'Client Call', desc: 'Discussed staffing requirements for Q1 2025', client: 'Shwe Taung Development', time: new Date(Date.now() - 4*3600000).toISOString(), recruiterId: 1 },
+                    { id: 3, type: 'email', title: 'Proposal Sent', desc: 'Sent annual staffing contract proposal', client: 'Parami Energy Services', time: new Date(Date.now() - 24*3600000).toISOString(), recruiterId: 2 },
+                    { id: 4, type: 'meeting', title: 'Client Meeting', desc: 'Met with HR Director to discuss teller recruitment', client: 'KBZ Bank Limited', time: new Date(Date.now() - 24*3600000).toISOString(), recruiterId: 3 },
+                    { id: 5, type: 'social', title: 'Job Posted', desc: 'Posted Software Developer role to LinkedIn', client: 'KBZ Bank Limited', time: new Date(Date.now() - 48*3600000).toISOString(), recruiterId: 2 },
+                    { id: 6, type: 'placement', title: 'Placement Completed', desc: 'Ma Hla Hla placed at Mandalay Garment Factory', client: 'Mandalay Garment Factory', time: new Date(Date.now() - 48*3600000).toISOString(), recruiterId: 4 }
+                ];
+                
+                const jobBoards = [
+                    { id: 1, name: 'LinkedIn', icon: 'linkedin', color: '#0077B5', active: true },
+                    { id: 2, name: 'Facebook Jobs', icon: 'facebook', color: '#1877F2', active: true },
+                    { id: 3, name: 'JobNet.com.mm', icon: 'jobnet', color: '#00A651', active: true },
+                    { id: 4, name: 'MyJobs.com.mm', icon: 'myjobs', color: '#FF6B00', active: true },
+                    { id: 5, name: 'Jobinyangon.com', icon: 'jiy', color: '#1E88E5', active: false }
+                ];
+                
+                localStorage.setItem('trm_team', JSON.stringify(team));
+                localStorage.setItem('trm_clients', JSON.stringify(clients));
+                localStorage.setItem('trm_jobs', JSON.stringify(jobs));
+                localStorage.setItem('trm_candidates', JSON.stringify(candidates));
+                localStorage.setItem('trm_deals', JSON.stringify(deals));
+                localStorage.setItem('trm_interviews', JSON.stringify(interviews));
+                localStorage.setItem('trm_activities', JSON.stringify(activities));
+                localStorage.setItem('trm_jobBoards', JSON.stringify(jobBoards));
+                localStorage.setItem('trm_initialized', 'true');
+            }
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            initDemoData();
+            
+            const role = document.getElementById('role').value;
+            const team = JSON.parse(localStorage.getItem('trm_team'));
+            let user;
+            
+            if (role === 'manager') user = team.find(t => t.role === 'manager');
+            else if (role === 'senior_recruiter') user = team.find(t => t.role === 'senior_recruiter');
+            else if (role === 'recruiter') user = team.find(t => t.role === 'recruiter');
+            else user = { id: 0, name: 'System Administrator', role: 'admin', avatar: 'AD', title: 'Administrator' };
+            
+            localStorage.setItem('trm_currentUser', JSON.stringify(user));
+            window.location.href = 'dashboard.html';
+        });
+        
+        initDemoData();
+    </script>
+</body>
+</html>
