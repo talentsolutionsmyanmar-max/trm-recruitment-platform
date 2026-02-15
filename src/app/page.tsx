@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
   Users, Briefcase, TrendingUp, UserCheck, Plus, ArrowRight, Settings, LayoutDashboard,
   Building2, Calendar, Target, Award, BarChart3, PieChart, Activity, Bell, Search,
@@ -1541,56 +1542,489 @@ export default function TRMPlatform() {
   );
 
   // ==================== PIPELINE ====================
-  const renderPipeline = () => {
-    const stages: Deal['stage'][] = ['lead', 'qualified', 'proposal', 'negotiation', 'won'];
-    const stageColors: Record<string, string> = {
-      lead: 'from-slate-400 to-slate-500',
-      qualified: 'from-blue-400 to-blue-500',
-      proposal: 'from-purple-400 to-purple-500',
-      negotiation: 'from-orange-400 to-orange-500',
-      won: 'from-green-400 to-green-500'
+  const [pipelineView, setPipelineView] = useState<'deals' | 'candidates'>('deals');
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
+  const [showDealDialog, setShowDealDialog] = useState(false);
+  const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
+  const [draggedDeal, setDraggedDeal] = useState<string | null>(null);
+  const [draggedCandidate, setDraggedCandidate] = useState<string | null>(null);
+
+  const dealStages: { id: Deal['stage']; label: string; color: string; probability: number }[] = [
+    { id: 'lead', label: 'Lead', color: 'from-slate-400 to-slate-500', probability: 10 },
+    { id: 'qualified', label: 'Qualified', color: 'from-blue-400 to-blue-600', probability: 25 },
+    { id: 'proposal', label: 'Proposal', color: 'from-purple-400 to-purple-600', probability: 50 },
+    { id: 'negotiation', label: 'Negotiation', color: 'from-orange-400 to-orange-600', probability: 75 },
+    { id: 'won', label: 'Won', color: 'from-green-400 to-emerald-600', probability: 100 }
+  ];
+
+  const candidateStages = [
+    { id: 'new', label: 'New', color: 'from-cyan-400 to-cyan-600' },
+    { id: 'screening', label: 'Screening', color: 'from-yellow-400 to-yellow-600' },
+    { id: 'interviewing', label: 'Interview', color: 'from-blue-400 to-blue-600' },
+    { id: 'offered', label: 'Offered', color: 'from-purple-400 to-purple-600' },
+    { id: 'placed', label: 'Placed', color: 'from-green-400 to-emerald-600' }
+  ];
+
+  const moveDealToStage = (dealId: string, newStage: Deal['stage']) => {
+    const stageInfo = dealStages.find(s => s.id === newStage);
+    setDeals(prev => prev.map(d => 
+      d.id === dealId 
+        ? { ...d, stage: newStage, probability: stageInfo?.probability || d.probability }
+        : d
+    ));
+    
+    // If won, create a placement record
+    if (newStage === 'won') {
+      const deal = deals.find(d => d.id === dealId);
+      if (deal) {
+        const newPlacement = {
+          id: `p${Date.now()}`,
+          candidateName: 'TBD',
+          jobTitle: deal.title,
+          clientName: deal.clientName,
+          salary: deal.value,
+          fee: Math.round(deal.value * 0.1),
+          date: new Date().toISOString().split('T')[0],
+          recruiterId: deal.assignedTo
+        };
+        setPlacements(prev => [...prev, newPlacement]);
+      }
+    }
+  };
+
+  const moveCandidateToStage = (candidateId: string, newStage: string) => {
+    setCandidates(prev => prev.map(c => 
+      c.id === candidateId ? { ...c, status: newStage } : c
+    ));
+    
+    // If placed, create placement record
+    if (newStage === 'placed') {
+      const candidate = candidates.find(c => c.id === candidateId);
+      if (candidate && candidate.appliedJobs.length > 0) {
+        const job = jobs.find(j => j.id === candidate.appliedJobs[0]);
+        if (job) {
+          const newPlacement = {
+            id: `p${Date.now()}`,
+            candidateName: candidate.name,
+            jobTitle: job.title,
+            clientName: job.clientName,
+            salary: candidate.expectedSalary,
+            fee: Math.round(candidate.expectedSalary * 0.1),
+            date: new Date().toISOString().split('T')[0],
+            recruiterId: candidate.assignedTo
+          };
+          setPlacements(prev => [...prev, newPlacement]);
+          
+          // Update job filled count
+          setJobs(prev => prev.map(j => 
+            j.id === job.id ? { ...j, filled: j.filled + 1 } : j
+          ));
+        }
+      }
+    }
+  };
+
+  const handleDealDragStart = (dealId: string) => {
+    setDraggedDeal(dealId);
+  };
+
+  const handleDealDrop = (stage: Deal['stage']) => {
+    if (draggedDeal) {
+      moveDealToStage(draggedDeal, stage);
+      setDraggedDeal(null);
+    }
+  };
+
+  const handleCandidateDragStart = (candidateId: string) => {
+    setDraggedCandidate(candidateId);
+  };
+
+  const handleCandidateDrop = (stage: string) => {
+    if (draggedCandidate) {
+      moveCandidateToStage(draggedCandidate, stage);
+      setDraggedCandidate(null);
+    }
+  };
+
+  const addNewDeal = (deal: Partial<Deal>) => {
+    const newDeal: Deal = {
+      id: `d${Date.now()}`,
+      title: deal.title || 'New Deal',
+      clientName: deal.clientName || '',
+      value: deal.value || 0,
+      stage: 'lead',
+      probability: 10,
+      expectedCloseDate: deal.expectedCloseDate || '',
+      assignedTo: deal.assignedTo || currentUser?.id || ''
     };
+    setDeals(prev => [...prev, newDeal]);
+  };
+
+  const renderPipeline = () => {
+    const totalPipelineValue = filteredDeals.filter(d => d.stage !== 'won').reduce((sum, d) => sum + d.value, 0);
+    const weightedValue = filteredDeals.reduce((sum, d) => sum + (d.value * d.probability / 100), 0);
 
     return (
       <div className="space-y-6">
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Sales Pipeline</h2>
-            <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Total value: {formatMMK(metrics.pipelineValue)}</p>
+            <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Pipeline Management</h2>
+            <p className="text-slate-500">Drag & drop to move items between stages</p>
           </div>
-          <Button className="h-9 bg-gradient-to-r from-blue-600 to-indigo-600">
-            <Plus className="h-4 w-4 mr-1" /> Add Deal
-          </Button>
+          <div className="flex items-center gap-3">
+            <div className="flex rounded-lg overflow-hidden border">
+              <button
+                onClick={() => setPipelineView('deals')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  pipelineView === 'deals' 
+                    ? 'bg-blue-600 text-white' 
+                    : theme === 'dark' ? 'bg-slate-800 text-slate-300' : 'bg-white text-slate-600'
+                }`}
+              >
+                <DollarSign className="h-4 w-4 inline mr-1" /> Deals
+              </button>
+              <button
+                onClick={() => setPipelineView('candidates')}
+                className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  pipelineView === 'candidates' 
+                    ? 'bg-blue-600 text-white' 
+                    : theme === 'dark' ? 'bg-slate-800 text-slate-300' : 'bg-white text-slate-600'
+                }`}
+              >
+                <Users className="h-4 w-4 inline mr-1" /> Candidates
+              </button>
+            </div>
+            {pipelineView === 'deals' && (
+              <Button onClick={() => { setEditingDeal(null); setShowDealDialog(true); }}>
+                <Plus className="h-4 w-4 mr-2" /> Add Deal
+              </Button>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-3">
-          {stages.map(stage => {
-            const stageDeals = filteredDeals.filter(d => d.stage === stage);
-            const stageValue = stageDeals.reduce((sum, d) => sum + d.value, 0);
-            return (
-              <div key={stage} className="min-w-[180px]">
-                <div className={`p-2 rounded-t-xl bg-gradient-to-r ${stageColors[stage]} text-white flex items-center justify-between`}>
-                  <span className="text-sm font-medium capitalize">{stage}</span>
-                  <Badge className="h-5 px-1.5 bg-white/20 text-white border-0 text-[10px]">{stageDeals.length}</Badge>
+        {/* Pipeline Analytics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Total Pipeline</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{formatMMK(totalPipelineValue)}</p>
                 </div>
-                <div className={`rounded-b-xl p-2 space-y-2 min-h-[200px] ${theme === 'dark' ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                  {stageDeals.map(deal => (
-                    <Card key={deal.id} className={`cursor-pointer hover:shadow-md transition-shadow border-0 ${theme === 'dark' ? 'bg-slate-700' : ''}`}>
-                      <CardContent className="p-3">
-                        <p className={`text-sm font-semibold truncate ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{deal.title}</p>
-                        <p className="text-[10px] text-slate-500 truncate">{deal.clientName}</p>
-                        <div className="flex items-center justify-between mt-2">
-                          <span className="text-sm font-bold text-green-600">{formatMMK(deal.value)}</span>
-                          <Badge variant="outline" className="text-[10px]">{deal.probability}%</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-blue-600" />
                 </div>
               </div>
-            );
-          })}
+            </CardContent>
+          </Card>
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Weighted Value</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{formatMMK(weightedValue)}</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
+                  <Target className="h-5 w-5 text-green-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">{pipelineView === 'deals' ? 'Active Deals' : 'Active Candidates'}</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>
+                    {pipelineView === 'deals' 
+                      ? filteredDeals.filter(d => d.stage !== 'won').length 
+                      : filteredCandidates.filter(c => c.status !== 'placed' && c.status !== 'rejected').length}
+                  </p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                  {pipelineView === 'deals' ? <Briefcase className="h-5 w-5 text-purple-600" /> : <Users className="h-5 w-5 text-purple-600" />}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Won This Month</p>
+                  <p className={`text-2xl font-bold text-green-600`}>{formatMMK(placements.reduce((s, p) => s + p.fee, 0))}</p>
+                </div>
+                <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <CheckCircle className="h-5 w-5 text-emerald-600" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Pipeline Board */}
+        {pipelineView === 'deals' ? (
+          <div className="grid grid-cols-5 gap-4 overflow-x-auto pb-4">
+            {dealStages.map(stage => {
+              const stageDeals = filteredDeals.filter(d => d.stage === stage.id);
+              const stageValue = stageDeals.reduce((sum, d) => sum + d.value, 0);
+              
+              return (
+                <div
+                  key={stage.id}
+                  className="min-w-[240px]"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => handleDealDrop(stage.id)}
+                >
+                  {/* Stage Header */}
+                  <div className={`p-3 rounded-t-xl bg-gradient-to-r ${stage.color} text-white flex items-center justify-between shadow-lg`}>
+                    <div>
+                      <span className="font-semibold">{stage.label}</span>
+                      <span className="ml-2 text-xs opacity-80">({stage.probability}%)</span>
+                    </div>
+                    <Badge className="bg-white/20 text-white border-0 text-xs">{stageDeals.length}</Badge>
+                  </div>
+                  
+                  {/* Stage Value */}
+                  <div className={`px-3 py-2 text-center border-x ${theme === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-slate-50 border-slate-200'}`}>
+                    <span className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{formatMMK(stageValue)}</span>
+                  </div>
+                  
+                  {/* Stage Content */}
+                  <div 
+                    className={`rounded-b-xl p-2 space-y-2 min-h-[300px] ${theme === 'dark' ? 'bg-slate-800/50' : 'bg-slate-50'} border-x border-b ${theme === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}
+                    onDragOver={(e) => e.preventDefault()}
+                  >
+                    {stageDeals.map(deal => (
+                      <Card
+                        key={deal.id}
+                        draggable
+                        onDragStart={() => handleDealDragStart(deal.id)}
+                        className={`cursor-grab active:cursor-grabbing hover:shadow-lg transition-all border-0 ${theme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white'} ${draggedDeal === deal.id ? 'opacity-50' : ''}`}
+                      >
+                        <CardContent className="p-3">
+                          <div className="flex items-start justify-between mb-2">
+                            <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{deal.title}</p>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                                  <MoreVertical className="h-3 w-3" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => { setEditingDeal(deal); setShowDealDialog(true); }}>
+                                  <Edit className="h-4 w-4 mr-2" /> Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setDeals(prev => prev.filter(d => d.id !== deal.id))}>
+                                  <Trash2 className="h-4 w-4 mr-2" /> Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                          
+                          <p className="text-xs text-slate-500 truncate mb-2">
+                            <Building2 className="h-3 w-3 inline mr-1" />
+                            {deal.clientName}
+                          </p>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-bold text-green-600">{formatMMK(deal.value)}</span>
+                            <Badge variant="outline" className="text-xs">{deal.probability}%</Badge>
+                          </div>
+                          
+                          {stage.id !== 'won' && stage.id !== 'lead' && (
+                            <Button 
+                              size="sm" 
+                              className="w-full mt-2 h-7 text-xs"
+                              onClick={() => {
+                                const nextStageIdx = dealStages.findIndex(s => s.id === stage.id) + 1;
+                                if (nextStageIdx < dealStages.length) {
+                                  moveDealToStage(deal.id, dealStages[nextStageIdx].id);
+                                }
+                              }}
+                            >
+                              <ArrowRight className="h-3 w-3 mr-1" /> Next Stage
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                    
+                    {stageDeals.length === 0 && (
+                      <div className={`h-24 rounded-lg border-2 border-dashed flex items-center justify-center ${theme === 'dark' ? 'border-slate-600' : 'border-slate-300'}`}>
+                        <p className="text-xs text-slate-400">Drop deals here</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          /* Candidate Pipeline */
+          <div className="grid grid-cols-5 gap-4 overflow-x-auto pb-4">
+            {candidateStages.map(stage => {
+              const stageCandidates = filteredCandidates.filter(c => c.status === stage.id);
+              
+              return (
+                <div
+                  key={stage.id}
+                  className="min-w-[240px]"
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => handleCandidateDrop(stage.id)}
+                >
+                  {/* Stage Header */}
+                  <div className={`p-3 rounded-t-xl bg-gradient-to-r ${stage.color} text-white flex items-center justify-between shadow-lg`}>
+                    <span className="font-semibold">{stage.label}</span>
+                    <Badge className="bg-white/20 text-white border-0 text-xs">{stageCandidates.length}</Badge>
+                  </div>
+                  
+                  {/* Stage Content */}
+                  <div 
+                    className={`rounded-b-xl p-2 space-y-2 min-h-[300px] ${theme === 'dark' ? 'bg-slate-800/50' : 'bg-slate-50'} border-x border-b ${theme === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}
+                    onDragOver={(e) => e.preventDefault()}
+                  >
+                    {stageCandidates.map(candidate => (
+                      <Card
+                        key={candidate.id}
+                        draggable
+                        onDragStart={() => handleCandidateDragStart(candidate.id)}
+                        className={`cursor-grab active:cursor-grabbing hover:shadow-lg transition-all border-0 ${theme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-white'} ${draggedCandidate === candidate.id ? 'opacity-50' : ''}`}
+                      >
+                        <CardContent className="p-3">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                {candidate.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm font-semibold truncate ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{candidate.name}</p>
+                              <p className="text-xs text-slate-500 truncate">{candidate.currentCompany}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-wrap gap-1 mb-2">
+                            {candidate.skills.slice(0, 2).map(skill => (
+                              <Badge key={skill} variant="outline" className="text-[10px] px-1">{skill}</Badge>
+                            ))}
+                          </div>
+                          
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-slate-500">
+                              <MapPin className="h-3 w-3 inline mr-1" />
+                              {candidate.location}
+                            </span>
+                            {candidate.matchScore && (
+                              <Badge className={`text-[10px] ${candidate.matchScore >= 80 ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                {candidate.matchScore}% match
+                              </Badge>
+                            )}
+                          </div>
+                          
+                          {stage.id !== 'placed' && (
+                            <Button 
+                              size="sm" 
+                              className="w-full mt-2 h-7 text-xs"
+                              onClick={() => {
+                                const nextStageIdx = candidateStages.findIndex(s => s.id === stage.id) + 1;
+                                if (nextStageIdx < candidateStages.length) {
+                                  moveCandidateToStage(candidate.id, candidateStages[nextStageIdx].id);
+                                }
+                              }}
+                            >
+                              <ArrowRight className="h-3 w-3 mr-1" /> Advance
+                            </Button>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                    
+                    {stageCandidates.length === 0 && (
+                      <div className={`h-24 rounded-lg border-2 border-dashed flex items-center justify-center ${theme === 'dark' ? 'border-slate-600' : 'border-slate-300'}`}>
+                        <p className="text-xs text-slate-400">Drop candidates here</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Deal Dialog */}
+        <Dialog open={showDealDialog} onOpenChange={setShowDealDialog}>
+          <DialogContent className={`max-w-md ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <DialogHeader>
+              <DialogTitle className={theme === 'dark' ? 'text-white' : ''}>
+                {editingDeal ? 'Edit Deal' : 'Add New Deal'}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Deal Title</Label>
+                <Input 
+                  placeholder="e.g., Annual Recruitment Contract" 
+                  className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+                  defaultValue={editingDeal?.title}
+                  id="deal-title"
+                />
+              </div>
+              <div>
+                <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Client</Label>
+                <Select defaultValue={editingDeal?.clientName}>
+                  <SelectTrigger className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                    <SelectValue placeholder="Select client" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {clients.map(c => (
+                      <SelectItem key={c.id} value={c.companyName}>{c.companyName}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Value (MMK)</Label>
+                <Input 
+                  type="number" 
+                  placeholder="15000000" 
+                  className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+                  defaultValue={editingDeal?.value}
+                  id="deal-value"
+                />
+              </div>
+              <div>
+                <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Expected Close Date</Label>
+                <Input 
+                  type="date" 
+                  className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}
+                  defaultValue={editingDeal?.expectedCloseDate}
+                  id="deal-date"
+                />
+              </div>
+            </div>
+            <DialogFooter className="mt-6">
+              <Button variant="outline" onClick={() => setShowDealDialog(false)}>Cancel</Button>
+              <Button onClick={() => {
+                const title = (document.getElementById('deal-title') as HTMLInputElement)?.value || 'New Deal';
+                const value = parseInt((document.getElementById('deal-value') as HTMLInputElement)?.value) || 0;
+                const date = (document.getElementById('deal-date') as HTMLInputElement)?.value || '';
+                
+                if (editingDeal) {
+                  setDeals(prev => prev.map(d => 
+                    d.id === editingDeal.id ? { ...d, title, value, expectedCloseDate: date } : d
+                  ));
+                } else {
+                  addNewDeal({ title, value, expectedCloseDate: date, clientName: clients[0]?.companyName });
+                }
+                setShowDealDialog(false);
+              }}>
+                {editingDeal ? 'Update' : 'Create'} Deal
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
