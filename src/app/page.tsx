@@ -892,27 +892,67 @@ export default function TRMPlatform() {
 
   // ==================== LOGIN SCREEN ====================
   const renderLogin = () => (
-    <div className={`min-h-screen flex items-center justify-center ${themeClasses} p-4`}>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-4 relative overflow-hidden">
+      {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-full blur-3xl" />
+        
+        {/* Floating particles */}
+        <div className="absolute top-20 left-20 w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDuration: '3s' }} />
+        <div className="absolute top-40 right-32 w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+        <div className="absolute bottom-32 left-40 w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} />
+        <div className="absolute bottom-20 right-20 w-4 h-4 bg-indigo-400 rounded-full animate-bounce" style={{ animationDuration: '5s' }} />
       </div>
       
-      <Card className={`w-full max-w-md relative z-10 border-0 shadow-2xl ${theme === 'dark' ? 'bg-slate-800' : 'bg-white'}`}>
+      {/* Floating Logo - TRM */}
+      <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-xl opacity-50 animate-pulse" />
+          <div className="relative h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-blue-500/50 border border-white/20">
+            <img 
+              src="/upload/TRM - Talent Resources Myanmar.JPG" 
+              alt="TRM Logo" 
+              className="h-14 w-14 object-contain rounded-lg"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const parent = e.currentTarget.parentElement;
+                if (parent) {
+                  parent.innerHTML = '<span class="text-2xl font-bold text-white">TRM</span>';
+                }
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      
+      <Card className="w-full max-w-md relative z-10 border-0 shadow-2xl bg-white/5 backdrop-blur-xl border border-white/10 mt-16">
         <CardContent className="p-8">
           <div className="text-center mb-8">
-            <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
-              <Sparkles className="h-10 w-10 text-white" />
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+              Talent Resources Myanmar
+            </h1>
+            <p className="text-sm text-blue-200/80 mt-2">Enterprise Recruitment Platform 2026</p>
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <span className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-xs text-blue-200">
+                ✨ AI-Powered
+              </span>
+              <span className="px-3 py-1 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-400/30 text-xs text-green-200">
+                🚀 World-Class
+              </span>
             </div>
-            <h1 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Talent Resources Myanmar</h1>
-            <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Enterprise Recruitment Platform</p>
           </div>
 
           <div className="relative my-6">
-            <Separator />
-            <span className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${theme === 'dark' ? 'bg-slate-800' : 'bg-white'} px-3 text-xs text-slate-500`}>
-              Quick Login (Demo)
-            </span>
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-white/10"></div>
+            </div>
+            <div className="relative flex justify-center">
+              <span className="px-4 text-xs text-slate-400 bg-transparent">
+                Quick Login
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -920,21 +960,26 @@ export default function TRMPlatform() {
               <Button
                 key={user.id}
                 variant="outline"
-                className={`h-auto py-4 flex flex-col items-center gap-2 ${theme === 'dark' ? 'border-slate-700 hover:bg-slate-700' : ''}`}
+                className="h-auto py-4 flex flex-col items-center gap-2 bg-white/5 border-white/10 hover:bg-white/10 hover:border-blue-400/50 transition-all duration-300 group"
                 onClick={() => { setCurrentUser(user); setIsAuthenticated(true); }}
               >
-                <Avatar className="h-10 w-10">
+                <Avatar className="h-10 w-10 ring-2 ring-white/20 group-hover:ring-blue-400/50 transition-all">
                   <AvatarFallback className={getRoleColor(user.role)}>{user.avatar}</AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium">{user.name.split(' ')[0]}</span>
-                <span className="text-[10px] text-slate-500">{getRoleLabel(user.role)}</span>
+                <span className="text-sm font-medium text-white">{user.name.split(' ')[0]}</span>
+                <span className="text-[10px] text-slate-400">{getRoleLabel(user.role)}</span>
               </Button>
             ))}
           </div>
 
-          <p className="text-center text-xs text-slate-400 mt-6">
-            © 2024 Talent Resources Myanmar. Empowering Myanmar's workforce.
-          </p>
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-xs text-slate-400">
+              © 2025 Talent Resources Myanmar
+            </p>
+            <p className="text-[10px] text-slate-500 mt-1">
+              Empowering Myanmar's Workforce • Built with ❤️
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -964,15 +1009,23 @@ export default function TRMPlatform() {
     ];
 
     return (
-      <aside className={`flex flex-col h-full transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'} ${theme === 'dark' ? 'bg-slate-900' : 'bg-gradient-to-b from-slate-900 via-slate-900 to-slate-800'} text-white`}>
-        <div className="flex items-center gap-3 px-4 h-16 border-b border-slate-700/50">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30 flex-shrink-0">
-            <Sparkles className="h-5 w-5 text-white" />
+      <aside className={`flex flex-col h-full transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-16'} bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white`}>
+        <div className="flex items-center gap-3 px-4 h-16 border-b border-white/10">
+          <div className="relative h-10 w-10 flex-shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-50" />
+            <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/30 border border-white/20">
+              <img 
+                src="/upload/TRM - Talent Resources Myanmar.JPG" 
+                alt="TRM" 
+                className="h-7 w-7 object-contain rounded"
+                onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement!.innerHTML = '<span class="text-xs font-bold text-white">TRM</span>'; }}
+              />
+            </div>
           </div>
           {sidebarOpen && (
             <div className="overflow-hidden">
-              <h1 className="text-base font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent whitespace-nowrap">Talent Resources</h1>
-              <p className="text-[10px] text-blue-300 whitespace-nowrap">Myanmar</p>
+              <h1 className="text-base font-bold bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent whitespace-nowrap">Talent Resources</h1>
+              <p className="text-[10px] text-blue-300 whitespace-nowrap">Myanmar 2026</p>
             </div>
           )}
         </div>
@@ -1019,31 +1072,31 @@ export default function TRMPlatform() {
           </nav>
         </ScrollArea>
 
-        <div className="border-t border-slate-700/50 p-2 space-y-1">
-          <button onClick={() => setLanguage(language === 'en' ? 'mm' : 'en')} className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors">
+        <div className="border-t border-white/10 p-2 space-y-1">
+          <button onClick={() => setLanguage(language === 'en' ? 'mm' : 'en')} className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 transition-colors">
             <Languages className="h-5 w-5" />
             {sidebarOpen && <span>{language === 'en' ? 'မြန်မာ' : 'English'}</span>}
           </button>
-          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors">
+          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 transition-colors">
             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             {sidebarOpen && <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>}
           </button>
-          <button onClick={() => setShowSettings(true)} className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-slate-800/50 transition-colors">
+          <button onClick={() => setShowSettings(true)} className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 transition-colors">
             <Settings className="h-5 w-5" />
             {sidebarOpen && <span>Settings</span>}
           </button>
         </div>
 
         {currentUser && (
-          <div className="border-t border-slate-700/50 p-2">
-            <button onClick={() => setShowProfile(true)} className="w-full flex items-center gap-3 p-2 rounded-xl bg-slate-800/50 hover:bg-slate-700/50 transition-colors">
+          <div className="border-t border-white/10 p-2">
+            <button onClick={() => setShowProfile(true)} className="w-full flex items-center gap-3 p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
               <Avatar className="h-9 w-9">
                 <AvatarFallback className={getRoleColor(currentUser.role)}>{currentUser.avatar}</AvatarFallback>
               </Avatar>
               {sidebarOpen && (
                 <div className="flex-1 text-left overflow-hidden">
                   <p className="text-sm font-semibold truncate">{currentUser.name}</p>
-                  <p className="text-[10px] text-slate-400 truncate">{getRoleLabel(currentUser.role)}</p>
+                  <p className="text-[10px] text-blue-300 truncate">{getRoleLabel(currentUser.role)}</p>
                 </div>
               )}
               <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
