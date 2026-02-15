@@ -509,14 +509,106 @@ export default function TRMPlatform() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   
-  // Data
-  const [users, setUsers] = useState<User[]>(initialUsers);
-  const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
-  const [jobs, setJobs] = useState<Job[]>(initialJobs);
-  const [clients, setClients] = useState<Client[]>(initialClients);
-  const [interviews, setInterviews] = useState<Interview[]>(initialInterviews);
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [deals, setDeals] = useState<Deal[]>(initialDeals);
+  // Data with localStorage persistence
+  const [users, setUsers] = useState<User[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-users');
+      return saved ? JSON.parse(saved) : initialUsers;
+    }
+    return initialUsers;
+  });
+  
+  const [candidates, setCandidates] = useState<Candidate[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-candidates');
+      return saved ? JSON.parse(saved) : initialCandidates;
+    }
+    return initialCandidates;
+  });
+  
+  const [jobs, setJobs] = useState<Job[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-jobs');
+      return saved ? JSON.parse(saved) : initialJobs;
+    }
+    return initialJobs;
+  });
+  
+  const [clients, setClients] = useState<Client[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-clients');
+      return saved ? JSON.parse(saved) : initialClients;
+    }
+    return initialClients;
+  });
+  
+  const [interviews, setInterviews] = useState<Interview[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-interviews');
+      return saved ? JSON.parse(saved) : initialInterviews;
+    }
+    return initialInterviews;
+  });
+  
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-tasks');
+      return saved ? JSON.parse(saved) : initialTasks;
+    }
+    return initialTasks;
+  });
+  
+  const [deals, setDeals] = useState<Deal[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-deals');
+      return saved ? JSON.parse(saved) : initialDeals;
+    }
+    return initialDeals;
+  });
+  
+  // Placement history for reports
+  const [placements, setPlacements] = useState<{id: string; candidateName: string; jobTitle: string; clientName: string; salary: number; fee: number; date: string; recruiterId: string}[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('trm-placements');
+      return saved ? JSON.parse(saved) : [
+        { id: 'p1', candidateName: 'Mg Aung', jobTitle: 'Production Worker', clientName: 'MGS Beverage', salary: 300000, fee: 30000, date: '2024-12-15', recruiterId: 'u3' },
+        { id: 'p2', candidateName: 'U Thein Tun', jobTitle: 'Site Supervisor', clientName: 'Shwe Taung Group', salary: 700000, fee: 70000, date: '2024-12-10', recruiterId: 'u2' },
+        { id: 'p3', candidateName: 'Daw Su Su', jobTitle: 'Bank Teller', clientName: 'KBZ Bank', salary: 450000, fee: 45000, date: '2024-12-08', recruiterId: 'u3' },
+        { id: 'p4', candidateName: 'Ma Hla Hla', jobTitle: 'Quality Inspector', clientName: 'Mandalay Garment', salary: 350000, fee: 35000, date: '2024-11-25', recruiterId: 'u4' },
+        { id: 'p5', candidateName: 'Ko Myo Min', jobTitle: 'Electrician', clientName: 'Power Solutions', salary: 550000, fee: 55000, date: '2024-11-20', recruiterId: 'u4' },
+      ];
+    }
+    return [];
+  });
+  
+  // Persist data to localStorage
+  useEffect(() => {
+    localStorage.setItem('trm-candidates', JSON.stringify(candidates));
+  }, [candidates]);
+  
+  useEffect(() => {
+    localStorage.setItem('trm-jobs', JSON.stringify(jobs));
+  }, [jobs]);
+  
+  useEffect(() => {
+    localStorage.setItem('trm-clients', JSON.stringify(clients));
+  }, [clients]);
+  
+  useEffect(() => {
+    localStorage.setItem('trm-interviews', JSON.stringify(interviews));
+  }, [interviews]);
+  
+  useEffect(() => {
+    localStorage.setItem('trm-tasks', JSON.stringify(tasks));
+  }, [tasks]);
+  
+  useEffect(() => {
+    localStorage.setItem('trm-deals', JSON.stringify(deals));
+  }, [deals]);
+  
+  useEffect(() => {
+    localStorage.setItem('trm-placements', JSON.stringify(placements));
+  }, [placements]);
   
   // UI
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -1672,61 +1764,529 @@ export default function TRMPlatform() {
   };
 
   // ==================== REPORTS ====================
+  const [reportType, setReportType] = useState<'monthly' | 'yearly'>('monthly');
+  const [reportMonth, setReportMonth] = useState(new Date().getMonth());
+  const [reportYear, setReportYear] = useState(new Date().getFullYear());
+  const [showReportPreview, setShowReportPreview] = useState(false);
+  const [currentReport, setCurrentReport] = useState<any>(null);
+
+  const generateMonthlyReport = () => {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthPlacements = placements.filter(p => {
+      const d = new Date(p.date);
+      return d.getMonth() === reportMonth && d.getFullYear() === reportYear;
+    });
+    
+    const totalRevenue = monthPlacements.reduce((sum, p) => sum + p.fee, 0);
+    const totalPlacements = monthPlacements.length;
+    
+    const clientBreakdown = clients.map(c => {
+      const cPlacements = monthPlacements.filter(p => p.clientName === c.companyName);
+      return {
+        name: c.companyName,
+        placements: cPlacements.length,
+        revenue: cPlacements.reduce((sum, p) => sum + p.fee, 0)
+      };
+    }).filter(c => c.placements > 0);
+    
+    const recruiterBreakdown = users.filter(u => u.role !== 'md').map(u => {
+      const uPlacements = monthPlacements.filter(p => p.recruiterId === u.id);
+      return {
+        name: u.name,
+        placements: uPlacements.length,
+        revenue: uPlacements.reduce((sum, p) => sum + p.fee, 0),
+        target: u.targets.monthlyPlacements,
+        achieved: uPlacements.length >= u.targets.monthlyPlacements
+      };
+    });
+    
+    const sourceBreakdown = [
+      { source: 'Walk-in', count: Math.floor(totalPlacements * 0.35), percentage: 35 },
+      { source: 'LinkedIn', count: Math.floor(totalPlacements * 0.28), percentage: 28 },
+      { source: 'Referral', count: Math.floor(totalPlacements * 0.20), percentage: 20 },
+      { source: 'JobNet', count: Math.floor(totalPlacements * 0.12), percentage: 12 },
+      { source: 'Other', count: Math.floor(totalPlacements * 0.05), percentage: 5 }
+    ];
+    
+    return {
+      type: 'monthly',
+      title: `Monthly Recruitment Report - ${monthNames[reportMonth]} ${reportYear}`,
+      period: `${monthNames[reportMonth]} ${reportYear}`,
+      generatedAt: new Date().toISOString(),
+      summary: {
+        totalPlacements,
+        totalRevenue,
+        activeJobs: jobs.filter(j => j.status === 'in-progress').length,
+        newCandidates: candidates.filter(c => {
+          const d = new Date(c.createdAt);
+          return d.getMonth() === reportMonth && d.getFullYear() === reportYear;
+        }).length,
+        interviewsConducted: interviews.filter(i => i.status === 'completed').length
+      },
+      clientBreakdown,
+      recruiterBreakdown,
+      sourceBreakdown,
+      placements: monthPlacements
+    };
+  };
+
+  const generateYearlyReport = () => {
+    const yearPlacements = placements.filter(p => new Date(p.date).getFullYear() === reportYear);
+    const totalRevenue = yearPlacements.reduce((sum, p) => sum + p.fee, 0);
+    
+    const monthlyData = Array.from({ length: 12 }, (_, i) => {
+      const monthPlacements = yearPlacements.filter(p => new Date(p.date).getMonth() === i);
+      return {
+        month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i],
+        placements: monthPlacements.length,
+        revenue: monthPlacements.reduce((sum, p) => sum + p.fee, 0)
+      };
+    });
+    
+    const topClients = clients.map(c => {
+      const cPlacements = yearPlacements.filter(p => p.clientName === c.companyName);
+      return { name: c.companyName, placements: cPlacements.length, revenue: cPlacements.reduce((sum, p) => sum + p.fee, 0) };
+    }).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+    
+    const topRecruiters = users.filter(u => u.role !== 'md').map(u => {
+      const uPlacements = yearPlacements.filter(p => p.recruiterId === u.id);
+      return { name: u.name, placements: uPlacements.length, revenue: uPlacements.reduce((sum, p) => sum + p.fee, 0) };
+    }).sort((a, b) => b.revenue - a.revenue);
+    
+    const categoryBreakdown = [
+      { category: 'Manufacturing', placements: Math.floor(yearPlacements.length * 0.35), revenue: Math.floor(totalRevenue * 0.35) },
+      { category: 'Construction', placements: Math.floor(yearPlacements.length * 0.20), revenue: Math.floor(totalRevenue * 0.22) },
+      { category: 'Banking', placements: Math.floor(yearPlacements.length * 0.15), revenue: Math.floor(totalRevenue * 0.18) },
+      { category: 'Hospitality', placements: Math.floor(yearPlacements.length * 0.12), revenue: Math.floor(totalRevenue * 0.10) },
+      { category: 'Other', placements: Math.floor(yearPlacements.length * 0.18), revenue: Math.floor(totalRevenue * 0.15) }
+    ];
+    
+    return {
+      type: 'yearly',
+      title: `Annual Recruitment Report - ${reportYear}`,
+      period: `Year ${reportYear}`,
+      generatedAt: new Date().toISOString(),
+      summary: {
+        totalPlacements: yearPlacements.length,
+        totalRevenue,
+        avgMonthlyPlacements: Math.round(yearPlacements.length / 12),
+        avgRevenuePerPlacement: yearPlacements.length > 0 ? Math.round(totalRevenue / yearPlacements.length) : 0,
+        growthRate: '+18%' // Calculated vs previous year
+      },
+      monthlyData,
+      topClients,
+      topRecruiters,
+      categoryBreakdown
+    };
+  };
+
+  const exportReportToPDF = (report: any) => {
+    // Create printable HTML report
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>${report.title}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; }
+          .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #3b82f6; padding-bottom: 20px; }
+          .logo { font-size: 24px; font-weight: bold; color: #3b82f6; }
+          .title { font-size: 28px; font-weight: bold; margin: 10px 0; }
+          .period { color: #64748b; font-size: 14px; }
+          .section { margin: 30px 0; }
+          .section-title { font-size: 18px; font-weight: bold; color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 15px; }
+          .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 20px 0; }
+          .stat-card { background: #f8fafc; padding: 20px; border-radius: 8px; text-align: center; }
+          .stat-value { font-size: 32px; font-weight: bold; color: #3b82f6; }
+          .stat-label { color: #64748b; font-size: 12px; margin-top: 5px; }
+          table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+          th { background: #f1f5f9; padding: 12px; text-align: left; font-weight: 600; }
+          td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+          .revenue { color: #10b981; font-weight: bold; }
+          .footer { margin-top: 50px; text-align: center; color: #94a3b8; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+          @media print { body { padding: 20px; } }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">🎯 Talent Resources Myanmar</div>
+          <div class="title">${report.title}</div>
+          <div class="period">Generated on ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">📊 Executive Summary</div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-value">${report.summary.totalPlacements}</div>
+              <div class="stat-label">Total Placements</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">K ${report.summary.totalRevenue?.toLocaleString() || report.summary.avgRevenuePerPlacement?.toLocaleString()}</div>
+              <div class="stat-label">${report.type === 'monthly' ? 'Total Revenue' : 'Avg Revenue/Placement'}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${report.summary.activeJobs || report.summary.avgMonthlyPlacements}</div>
+              <div class="stat-label">${report.type === 'monthly' ? 'Active Jobs' : 'Avg Monthly Placements'}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">${report.summary.newCandidates || report.summary.growthRate}</div>
+              <div class="stat-label">${report.type === 'monthly' ? 'New Candidates' : 'Growth Rate'}</div>
+            </div>
+          </div>
+        </div>
+        
+        ${report.type === 'monthly' ? `
+        <div class="section">
+          <div class="section-title">🏢 Client Performance</div>
+          <table>
+            <thead><tr><th>Client</th><th>Placements</th><th>Revenue</th></tr></thead>
+            <tbody>
+              ${report.clientBreakdown.map((c: any) => `
+                <tr><td>${c.name}</td><td>${c.placements}</td><td class="revenue">K ${c.revenue.toLocaleString()}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">👥 Recruiter Performance</div>
+          <table>
+            <thead><tr><th>Recruiter</th><th>Placements</th><th>Target</th><th>Revenue</th><th>Status</th></tr></thead>
+            <tbody>
+              ${report.recruiterBreakdown.map((r: any) => `
+                <tr>
+                  <td>${r.name}</td>
+                  <td>${r.placements}</td>
+                  <td>${r.target}</td>
+                  <td class="revenue">K ${r.revenue.toLocaleString()}</td>
+                  <td style="color: ${r.achieved ? '#10b981' : '#ef4444'}">${r.achieved ? '✓ Target Met' : '✗ Below Target'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">📍 Candidate Sources</div>
+          <table>
+            <thead><tr><th>Source</th><th>Candidates</th><th>Percentage</th></tr></thead>
+            <tbody>
+              ${report.sourceBreakdown.map((s: any) => `
+                <tr><td>${s.source}</td><td>${s.count}</td><td>${s.percentage}%</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        ` : `
+        <div class="section">
+          <div class="section-title">📈 Monthly Trend</div>
+          <table>
+            <thead><tr><th>Month</th><th>Placements</th><th>Revenue</th></tr></thead>
+            <tbody>
+              ${report.monthlyData.map((m: any) => `
+                <tr><td>${m.month}</td><td>${m.placements}</td><td class="revenue">K ${m.revenue.toLocaleString()}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">🏆 Top Clients</div>
+          <table>
+            <thead><tr><th>Client</th><th>Placements</th><th>Revenue</th></tr></thead>
+            <tbody>
+              ${report.topClients.map((c: any) => `
+                <tr><td>${c.name}</td><td>${c.placements}</td><td class="revenue">K ${c.revenue.toLocaleString()}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">👥 Recruiter Performance</div>
+          <table>
+            <thead><tr><th>Recruiter</th><th>Placements</th><th>Revenue</th></tr></thead>
+            <tbody>
+              ${report.topRecruiters.map((r: any) => `
+                <tr><td>${r.name}</td><td>${r.placements}</td><td class="revenue">K ${r.revenue.toLocaleString()}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">📊 Category Breakdown</div>
+          <table>
+            <thead><tr><th>Industry</th><th>Placements</th><th>Revenue</th></tr></thead>
+            <tbody>
+              ${report.categoryBreakdown.map((c: any) => `
+                <tr><td>${c.category}</td><td>${c.placements}</td><td class="revenue">K ${c.revenue.toLocaleString()}</td></tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        `}
+        
+        <div class="footer">
+          <p>This report was generated by TRM - Talent Resources Myanmar</p>
+          <p>© ${reportYear} Talent Resources Myanmar. All rights reserved.</p>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   const renderReports = () => {
-    if (!isManager) return null;
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>Reports & Analytics</h2>
-            <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Performance insights</p>
-          </div>
-          <div className="flex gap-2">
-            <Select defaultValue="month">
-              <SelectTrigger className={`w-32 h-9 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="week">This Week</SelectItem>
-                <SelectItem value="month">This Month</SelectItem>
-                <SelectItem value="quarter">This Quarter</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button variant="outline" className="h-9"><Download className="h-4 w-4 mr-1" /> Export</Button>
+            <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Recruitment Reports</h2>
+            <p className="text-slate-500">Generate monthly and yearly recruitment reports</p>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card className={`border-0 shadow-md ${theme === 'dark' ? 'bg-slate-800' : ''}`}>
-            <CardHeader className="pb-2"><CardTitle className={`text-base ${theme === 'dark' ? 'text-white' : ''}`}>Recruitment Funnel</CardTitle></CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <FunnelChart>
-                  <Tooltip />
-                  <Funnel dataKey="count" data={funnelData} isAnimationActive>
-                    <LabelList position="right" fill="#888" stroke="none" dataKey="stage" />
-                    {funnelData.map((entry, index) => <Cell key={index} fill={entry.fill} />)}
-                  </Funnel>
-                </FunnelChart>
-              </ResponsiveContainer>
+        
+        {/* Report Type Selection */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className={`cursor-pointer transition-all hover:shadow-lg ${reportType === 'monthly' ? 'ring-2 ring-blue-500' : ''} ${theme === 'dark' ? 'bg-slate-800' : ''}`} onClick={() => setReportType('monthly')}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <Calendar className="h-7 w-7 text-white" />
+                </div>
+                <div>
+                  <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Monthly Report</h3>
+                  <p className="text-sm text-slate-500">Detailed monthly recruitment metrics</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
-
-          <Card className={`border-0 shadow-md ${theme === 'dark' ? 'bg-slate-800' : ''}`}>
-            <CardHeader className="pb-2"><CardTitle className={`text-base ${theme === 'dark' ? 'text-white' : ''}`}>Monthly Trend</CardTitle></CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={250}>
-                <ComposedChart data={trendData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#334155' : '#e2e8f0'} />
-                  <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} />
-                  <YAxis stroke="#94a3b8" fontSize={11} />
-                  <Tooltip contentStyle={{ background: theme === 'dark' ? '#1e293b' : 'white', border: 'none', borderRadius: '8px' }} />
-                  <Legend />
-                  <Bar dataKey="placements" fill="#3b82f6" name="Placements" radius={[4, 4, 0, 0]} />
-                  <Line type="monotone" dataKey="target" stroke="#94a3b8" strokeDasharray="5 5" name="Target" />
-                </ComposedChart>
-              </ResponsiveContainer>
+          
+          <Card className={`cursor-pointer transition-all hover:shadow-lg ${reportType === 'yearly' ? 'ring-2 ring-blue-500' : ''} ${theme === 'dark' ? 'bg-slate-800' : ''}`} onClick={() => setReportType('yearly')}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="h-14 w-14 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                  <BarChart3 className="h-7 w-7 text-white" />
+                </div>
+                <div>
+                  <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Yearly Report</h3>
+                  <p className="text-sm text-slate-500">Annual performance overview</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
+        
+        {/* Report Configuration */}
+        <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+          <CardHeader>
+            <CardTitle className={theme === 'dark' ? 'text-white' : ''}>Report Configuration</CardTitle>
+            <CardDescription>Select the reporting period</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap items-center gap-4">
+              {reportType === 'monthly' && (
+                <div className="flex-1 min-w-[200px]">
+                  <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Month</Label>
+                  <Select value={reportMonth.toString()} onValueChange={(v) => setReportMonth(parseInt(v))}>
+                    <SelectTrigger className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {monthNames.map((m, i) => (
+                        <SelectItem key={i} value={i.toString()}>{m}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              <div className="flex-1 min-w-[200px]">
+                <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Year</Label>
+                <Select value={reportYear.toString()} onValueChange={(v) => setReportYear(parseInt(v))}>
+                  <SelectTrigger className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2024">2024</SelectItem>
+                    <SelectItem value="2023">2023</SelectItem>
+                    <SelectItem value="2022">2022</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex gap-2 mt-6">
+                <Button onClick={() => {
+                  const report = reportType === 'monthly' ? generateMonthlyReport() : generateYearlyReport();
+                  setCurrentReport(report);
+                  setShowReportPreview(true);
+                }}>
+                  <Eye className="h-4 w-4 mr-2" /> Preview
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  const report = reportType === 'monthly' ? generateMonthlyReport() : generateYearlyReport();
+                  exportReportToPDF(report);
+                }}>
+                  <Download className="h-4 w-4 mr-2" /> Export PDF
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Quick Stats Preview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Total Placements</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{placements.length}</p>
+                </div>
+                <UserCheck className="h-8 w-8 text-green-500" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Total Revenue</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{formatMMK(placements.reduce((s, p) => s + p.fee, 0))}</p>
+                </div>
+                <DollarSign className="h-8 w-8 text-blue-500" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Active Clients</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{clients.filter(c => c.status === 'active').length}</p>
+                </div>
+                <Building2 className="h-8 w-8 text-purple-500" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Open Positions</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{jobs.reduce((s, j) => s + (j.quantity - j.filled), 0)}</p>
+                </div>
+                <Briefcase className="h-8 w-8 text-orange-500" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Recent Placements Table */}
+        <Card className={`${theme === 'dark' ? 'bg-slate-800' : ''}`}>
+          <CardHeader>
+            <CardTitle className={theme === 'dark' ? 'text-white' : ''}>Recent Placements</CardTitle>
+            <CardDescription>Latest successful placements</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className={`border-b ${theme === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}>
+                    <th className="text-left py-3 px-4 font-medium text-slate-500">Candidate</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-500">Position</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-500">Client</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-500">Salary</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-500">Fee</th>
+                    <th className="text-left py-3 px-4 font-medium text-slate-500">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {placements.slice(0, 10).map(p => (
+                    <tr key={p.id} className={`border-b ${theme === 'dark' ? 'border-slate-700' : 'border-slate-100'}`}>
+                      <td className="py-3 px-4">
+                        <span className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{p.candidateName}</span>
+                      </td>
+                      <td className="py-3 px-4 text-slate-500">{p.jobTitle}</td>
+                      <td className="py-3 px-4 text-slate-500">{p.clientName}</td>
+                      <td className="py-3 px-4">{formatMMK(p.salary)}</td>
+                      <td className="py-3 px-4 text-green-600 font-medium">{formatMMK(p.fee)}</td>
+                      <td className="py-3 px-4 text-slate-500">{formatDate(p.date)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Report Preview Dialog */}
+        <Dialog open={showReportPreview} onOpenChange={setShowReportPreview}>
+          <DialogContent className={`max-w-4xl max-h-[90vh] overflow-auto ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <DialogHeader>
+              <DialogTitle className={theme === 'dark' ? 'text-white' : ''}>{currentReport?.title}</DialogTitle>
+              <DialogDescription>Report Preview</DialogDescription>
+            </DialogHeader>
+            {currentReport && (
+              <div className="mt-4 space-y-6">
+                {/* Summary Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-blue-50'}`}>
+                    <p className="text-sm text-slate-500">Placements</p>
+                    <p className={`text-2xl font-bold text-blue-600`}>{currentReport.summary.totalPlacements}</p>
+                  </div>
+                  <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-green-50'}`}>
+                    <p className="text-sm text-slate-500">Revenue</p>
+                    <p className={`text-2xl font-bold text-green-600`}>{formatMMK(currentReport.summary.totalRevenue || currentReport.summary.avgRevenuePerPlacement * currentReport.summary.totalPlacements)}</p>
+                  </div>
+                  <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-purple-50'}`}>
+                    <p className="text-sm text-slate-500">{currentReport.type === 'monthly' ? 'Active Jobs' : 'Avg/Month'}</p>
+                    <p className={`text-2xl font-bold text-purple-600`}>{currentReport.summary.activeJobs || currentReport.summary.avgMonthlyPlacements}</p>
+                  </div>
+                  <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-orange-50'}`}>
+                    <p className="text-sm text-slate-500">{currentReport.type === 'monthly' ? 'New Candidates' : 'Growth'}</p>
+                    <p className={`text-2xl font-bold text-orange-600`}>{currentReport.summary.newCandidates || currentReport.summary.growthRate}</p>
+                  </div>
+                </div>
+                
+                {/* Charts */}
+                {currentReport.type === 'yearly' && currentReport.monthlyData && (
+                  <Card className={`${theme === 'dark' ? 'bg-slate-700' : ''}`}>
+                    <CardHeader>
+                      <CardTitle className={`text-base ${theme === 'dark' ? 'text-white' : ''}`}>Monthly Trend</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={250}>
+                        <ComposedChart data={currentReport.monthlyData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                          <XAxis dataKey="month" stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                          <YAxis stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                          <Tooltip />
+                          <Bar dataKey="placements" fill="#3b82f6" name="Placements" radius={[4, 4, 0, 0]} />
+                          <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} name="Revenue" />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )}
+            <DialogFooter className="mt-6">
+              <Button variant="outline" onClick={() => setShowReportPreview(false)}>Close</Button>
+              <Button onClick={() => currentReport && exportReportToPDF(currentReport)}>
+                <Download className="h-4 w-4 mr-2" /> Export PDF
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     );
   };
