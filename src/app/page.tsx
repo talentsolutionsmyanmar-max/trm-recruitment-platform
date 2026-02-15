@@ -316,6 +316,10 @@ export default function TRMPlatform() {
   const [showJobDialog, setShowJobDialog] = useState(false);
   const [showTaskDialog, setShowTaskDialog] = useState(false);
   const [showInterviewDialog, setShowInterviewDialog] = useState(false);
+  const [showJobBoardDialog, setShowJobBoardDialog] = useState(false);
+  const [showOfferDialog, setShowOfferDialog] = useState(false);
+  const [showNotificationCenter, setShowNotificationCenter] = useState(false);
+  const [showOnboardingDialog, setShowOnboardingDialog] = useState(false);
   
   // Edit states
   const [editingCandidate, setEditingCandidate] = useState<Candidate | null>(null);
@@ -323,6 +327,21 @@ export default function TRMPlatform() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  
+  // New feature states
+  const [selectedJobBoards, setSelectedJobBoards] = useState<string[]>([]);
+  const [offerLetterData, setOfferLetterData] = useState<{subject: string; content: string} | null>(null);
+  const [notificationHistory, setNotificationHistory] = useState<{id: string; type: string; message: string; time: string}[]>([]);
+  const [onboardingChecklist, setOnboardingChecklist] = useState<{id: string; task: string; completed: boolean}[]>([
+    { id: '1', task: 'Complete personal information form', completed: false },
+    { id: '2', task: 'Submit NRC copy', completed: false },
+    { id: '3', task: 'Provide bank account details', completed: false },
+    { id: '4', task: 'Sign employment contract', completed: false },
+    { id: '5', task: 'Complete tax form', completed: false },
+    { id: '6', task: 'Emergency contact information', completed: false },
+    { id: '7', task: 'Profile photo submission', completed: false },
+    { id: '8', task: 'Company orientation scheduled', completed: false }
+  ]);
   
   // AI states
   const [aiLoading, setAiLoading] = useState(false);
@@ -1755,6 +1774,251 @@ export default function TRMPlatform() {
     </Dialog>
   );
 
+  // Job Board Posting Dialog
+  const renderJobBoardDialog = () => {
+    const jobBoards = [
+      { id: 'linkedin', name: 'LinkedIn Jobs', reach: '8M+', status: 'connected', color: 'from-blue-600 to-blue-700' },
+      { id: 'jobnet', name: 'JobNet Myanmar', reach: '500K+', status: 'connected', color: 'from-green-600 to-green-700' },
+      { id: 'myanmarjobs', name: 'MyanmarJobs', reach: '300K+', status: 'connected', color: 'from-orange-500 to-orange-600' },
+      { id: 'jobless', name: 'Jobless.com.mm', reach: '200K+', status: 'connected', color: 'from-purple-500 to-purple-600' },
+      { id: 'work', name: 'Work.com.mm', reach: '150K+', status: 'available', color: 'from-cyan-500 to-cyan-600' },
+      { id: 'indeed', name: 'Indeed', reach: '250M+', status: 'available', color: 'from-indigo-500 to-indigo-600' }
+    ];
+
+    return (
+      <Dialog open={showJobBoardDialog} onOpenChange={setShowJobBoardDialog}>
+        <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+              <Globe className="h-5 w-5 text-blue-500" /> Post to Job Boards
+            </DialogTitle>
+            <DialogDescription>Select job boards to publish this position</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 mt-4">
+            {jobBoards.map(board => (
+              <div
+                key={board.id}
+                onClick={() => {
+                  setSelectedJobBoards(prev => 
+                    prev.includes(board.id) ? prev.filter(b => b !== board.id) : [...prev, board.id]
+                  );
+                }}
+                className={`flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all ${
+                  selectedJobBoards.includes(board.id)
+                    ? 'bg-blue-50 border-2 border-blue-500'
+                    : theme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-50 hover:bg-slate-100'
+                }`}
+              >
+                <div className={`h-10 w-10 rounded-lg bg-gradient-to-br ${board.color} flex items-center justify-center text-white font-bold text-sm`}>
+                  {board.name.substring(0, 2).toUpperCase()}
+                </div>
+                <div className="flex-1">
+                  <p className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{board.name}</p>
+                  <p className="text-xs text-slate-500">{board.reach} potential candidates</p>
+                </div>
+                <Badge className={board.status === 'connected' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}>
+                  {board.status}
+                </Badge>
+                {selectedJobBoards.includes(board.id) && <CheckCircle className="h-5 w-5 text-blue-500" />}
+              </div>
+            ))}
+          </div>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setShowJobBoardDialog(false)}>Cancel</Button>
+            <Button onClick={() => setShowJobBoardDialog(false)} disabled={selectedJobBoards.length === 0}>
+              <Send className="h-4 w-4 mr-2" /> Post to {selectedJobBoards.length} Board{selectedJobBoards.length !== 1 ? 's' : ''}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+  // Offer Letter Dialog
+  const renderOfferLetterDialog = () => (
+    <Dialog open={showOfferDialog} onOpenChange={setShowOfferDialog}>
+      <DialogContent className={`max-w-2xl max-h-[90vh] overflow-y-auto ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <FileText className="h-5 w-5 text-purple-500" /> Generate Offer Letter
+          </DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Candidate Name</Label>
+            <Input placeholder="Full name" id="offerName" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} defaultValue={selectedCandidate?.name} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Position</Label>
+            <Input placeholder="Job title" id="offerPosition" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Company</Label>
+            <Input placeholder="Company name" id="offerCompany" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Monthly Salary (MMK)</Label>
+            <Input type="number" placeholder="500000" id="offerSalary" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} defaultValue={selectedCandidate?.expectedSalary} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Start Date</Label>
+            <Input type="date" id="offerStart" className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Probation Period</Label>
+            <Select defaultValue="3">
+              <SelectTrigger className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 month</SelectItem>
+                <SelectItem value="2">2 months</SelectItem>
+                <SelectItem value="3">3 months</SelectItem>
+                <SelectItem value="6">6 months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {offerLetterData && (
+          <div className="mt-4 space-y-3">
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Subject</Label>
+              <Input value={offerLetterData.subject} readOnly className={`mt-1.5 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+            </div>
+            <div>
+              <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Offer Letter Content</Label>
+              <Textarea value={offerLetterData.content} readOnly className={`mt-1.5 h-48 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+            </div>
+          </div>
+        )}
+        
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowOfferDialog(false)}>Cancel</Button>
+          {!offerLetterData ? (
+            <Button onClick={async () => {
+              setAiLoading(true);
+              try {
+                const response = await fetch('/api/offers/generate', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    candidateName: (document.getElementById('offerName') as HTMLInputElement)?.value,
+                    jobTitle: (document.getElementById('offerPosition') as HTMLInputElement)?.value,
+                    companyName: (document.getElementById('offerCompany') as HTMLInputElement)?.value,
+                    salary: (document.getElementById('offerSalary') as HTMLInputElement)?.value,
+                    startDate: (document.getElementById('offerStart') as HTMLInputElement)?.value
+                  })
+                });
+                const data = await response.json();
+                if (data.success) setOfferLetterData(data.offerLetter);
+              } catch (e) { console.error(e); }
+              setAiLoading(false);
+            }} disabled={aiLoading}>
+              {aiLoading ? <><RefreshCw className="h-4 w-4 mr-2 animate-spin" /> Generating...</> : <><Wand2 className="h-4 w-4 mr-2" /> Generate Letter</>}
+            </Button>
+          ) : (
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setOfferLetterData(null)}>Regenerate</Button>
+              <Button><Send className="h-4 w-4 mr-2" /> Send Offer</Button>
+            </div>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Notification Center Dialog
+  const renderNotificationCenterDialog = () => (
+    <Dialog open={showNotificationCenter} onOpenChange={setShowNotificationCenter}>
+      <DialogContent className={`max-w-md ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Bell className="h-5 w-5 text-orange-500" /> Notification Center
+          </DialogTitle>
+        </DialogHeader>
+        <Tabs defaultValue="all" className="mt-4">
+          <TabsList className="grid grid-cols-3 w-full">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="email">Email</TabsTrigger>
+            <TabsTrigger value="sms">SMS</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all" className="mt-4 space-y-2">
+            {[
+              { id: '1', type: 'email', message: 'Interview reminder sent to Mg Aung', time: '2 min ago', icon: Mail },
+              { id: '2', type: 'sms', message: 'SMS sent to Ma Hla Hla', time: '15 min ago', icon: Phone },
+              { id: '3', type: 'email', message: 'Offer letter sent to U Thein Tun', time: '1 hour ago', icon: FileText },
+              { id: '4', type: 'email', message: 'Weekly report generated', time: '2 hours ago', icon: BarChart3 }
+            ].map(n => (
+              <div key={n.id} className={`flex items-center gap-3 p-3 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                <div className={`h-8 w-8 rounded-full flex items-center justify-center ${n.type === 'email' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>
+                  <n.icon className="h-4 w-4" />
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{n.message}</p>
+                  <p className="text-xs text-slate-500">{n.time}</p>
+                </div>
+              </div>
+            ))}
+          </TabsContent>
+        </Tabs>
+        <div className="mt-4 pt-4 border-t border-slate-200">
+          <Button className="w-full" variant="outline">
+            <Send className="h-4 w-4 mr-2" /> Send New Notification
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Onboarding Dialog
+  const renderOnboardingDialog = () => {
+    const completedCount = onboardingChecklist.filter(item => item.completed).length;
+    const progress = (completedCount / onboardingChecklist.length) * 100;
+
+    return (
+      <Dialog open={showOnboardingDialog} onOpenChange={setShowOnboardingDialog}>
+        <DialogContent className={`max-w-md ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <DialogHeader>
+            <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+              <ClipboardList className="h-5 w-5 text-green-500" /> Onboarding Checklist
+            </DialogTitle>
+            <DialogDescription>Track new hire onboarding progress</DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 space-y-4">
+            <div>
+              <div className="flex justify-between text-sm mb-2">
+                <span className={theme === 'dark' ? 'text-slate-300' : ''}>Progress</span>
+                <span className="font-semibold">{completedCount}/{onboardingChecklist.length} completed</span>
+              </div>
+              <Progress value={progress} className="h-2" />
+            </div>
+            <div className="space-y-2">
+              {onboardingChecklist.map(item => (
+                <div
+                  key={item.id}
+                  onClick={() => setOnboardingChecklist(prev => prev.map(i => i.id === item.id ? { ...i, completed: !i.completed } : i))}
+                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all ${
+                    item.completed
+                      ? 'bg-green-50 border border-green-200'
+                      : theme === 'dark' ? 'bg-slate-700 hover:bg-slate-600' : 'bg-slate-50 hover:bg-slate-100'
+                  }`}
+                >
+                  <div className={`h-5 w-5 rounded flex items-center justify-center ${item.completed ? 'bg-green-500' : 'border-2 border-slate-300'}`}>
+                    {item.completed && <CheckCircle className="h-4 w-4 text-white" />}
+                  </div>
+                  <span className={`text-sm ${item.completed ? 'line-through text-slate-500' : theme === 'dark' ? 'text-white' : ''}`}>{item.task}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setShowOnboardingDialog(false)}>Close</Button>
+            {progress === 100 && <Button>Complete Onboarding</Button>}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
   // ==================== RENDER ====================
   if (!isAuthenticated || !currentUser) return renderLogin();
 
@@ -1788,6 +2052,10 @@ export default function TRMPlatform() {
       {renderEmailComposerDialog()}
       {renderAIMatcherDialog()}
       {renderCandidateDialog()}
+      {renderJobBoardDialog()}
+      {renderOfferLetterDialog()}
+      {renderNotificationCenterDialog()}
+      {renderOnboardingDialog()}
     </div>
   );
 }
