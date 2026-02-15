@@ -33,8 +33,8 @@ import {
   Layout, Settings2, HardDrive, Cloud, Globe2, Languages, Copy,
   TrendingUp as TrendingUpIcon, FileSignature, ShieldCheck, AlertOctagon,
   Zap as ZapIcon, Workflow, Link, Linkedin, MailCheck, CalendarSync,
-  FileBadge, ClipboardCheck, History, Automation, Rocket, Target as TargetIcon,
-  PieChart2, Activity as ActivityIcon, Gauge, Flag
+  FileBadge, ClipboardCheck, History, Rocket, Target as TargetIcon,
+  Gauge, Flag
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -866,7 +866,7 @@ export default function TRMPlatform() {
       { id: 'automation', label: 'Automation', icon: Workflow, show: isManager },
       { id: 'compliance', label: 'Compliance', icon: ShieldCheck, show: isManager },
       { id: 'integrations', label: 'Integrations', icon: Link, show: isManager },
-      { id: 'reports', label: 'Reports', icon: PieChart2, show: isManager },
+      { id: 'reports', label: 'Reports', icon: PieChart, show: isManager },
       { id: 'admin', label: 'Admin', icon: Shield, show: isMD }
     ];
 
