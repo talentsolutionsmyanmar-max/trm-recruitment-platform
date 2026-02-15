@@ -30,7 +30,11 @@ import {
   ChevronRight, Play, Pause, RotateCcw, Bot, Brain, Cpu, Layers, Wand2,
   FileSearch, Users2, BriefcaseMedical, CalendarCheck, MailOpen, SendHorizonal,
   FileUp, AlertTriangle, CheckCircle2, Timer, PieChart as PieChartIcon, LineChart as LineChartIcon,
-  Layout, Settings2, HardDrive, Cloud, Globe2, Languages, Copy
+  Layout, Settings2, HardDrive, Cloud, Globe2, Languages, Copy,
+  TrendingUp as TrendingUpIcon, FileSignature, ShieldCheck, AlertOctagon,
+  Zap as ZapIcon, Workflow, Link, Linkedin, MailCheck, CalendarSync,
+  FileBadge, ClipboardCheck, History, Automation, Rocket, Target as TargetIcon,
+  PieChart2, Activity as ActivityIcon, Gauge, Flag
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -370,6 +374,48 @@ export default function TRMPlatform() {
   // Skills assessment states
   const [skillAssessments, setSkillAssessments] = useState<{skill: string; score: number; maxScore: number}[]>([]);
   
+  // Language support
+  const [language, setLanguage] = useState<'en' | 'mm'>('en');
+  
+  // Advanced Analytics states
+  const [analyticsPeriod, setAnalyticsPeriod] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
+  const [predictiveInsights, setPredictiveInsights] = useState(true);
+  
+  // Compliance & Documents states
+  const [documents, setDocuments] = useState<{id: string; name: string; type: string; status: 'pending' | 'sent' | 'signed'; candidateName?: string; expiryDate?: string}[]>([
+    { id: 'd1', name: 'Employment Contract Template', type: 'contract', status: 'pending' },
+    { id: 'd2', name: 'NDA Agreement', type: 'nda', status: 'pending' },
+    { id: 'd3', name: 'Offer Letter - Mg Aung', type: 'offer', status: 'sent', candidateName: 'Mg Aung' },
+    { id: 'd4', name: 'Work Permit - U Thein Tun', type: 'permit', status: 'signed', candidateName: 'U Thein Tun', expiryDate: '2025-06-15' }
+  ]);
+  const [auditLogs, setAuditLogs] = useState<{id: string; action: string; user: string; timestamp: string; details: string}[]>([
+    { id: 'a1', action: 'Candidate Status Changed', user: 'Ko Zaw Zaw', timestamp: '2024-12-20 10:30', details: 'Mg Aung moved to Interviewing' },
+    { id: 'a2', action: 'Job Created', user: 'Daw Mya Mya', timestamp: '2024-12-19 14:15', details: 'Site Supervisor position added' },
+    { id: 'a3', action: 'Document Signed', user: 'Ma Hla Hla', timestamp: '2024-12-18 09:00', details: 'Offer letter signed by U Thein Tun' }
+  ]);
+  
+  // Automation states
+  const [automations, setAutomations] = useState<{id: string; name: string; trigger: string; action: string; active: boolean; executions: number}[]>([
+    { id: 'auto1', name: 'Welcome Email', trigger: 'New Candidate Added', action: 'Send welcome email', active: true, executions: 156 },
+    { id: 'auto2', name: 'Interview Reminder', trigger: 'Interview Scheduled', action: 'Send reminder 24h before', active: true, executions: 89 },
+    { id: 'auto3', name: 'Job Assignment Task', trigger: 'Job Assigned', action: 'Create screening task', active: true, executions: 45 },
+    { id: 'auto4', name: 'Weekly Report', trigger: 'Every Friday 5PM', action: 'Email performance summary', active: false, executions: 12 }
+  ]);
+  
+  // Integration states
+  const [integrations, setIntegrations] = useState<{id: string; name: string; icon: string; status: 'connected' | 'disconnected' | 'pending'; lastSync?: string}[]>([
+    { id: 'i1', name: 'LinkedIn Recruiter', icon: 'linkedin', status: 'connected', lastSync: '2024-12-20 08:00' },
+    { id: 'i2', name: 'JobNet.com.mm', icon: 'jobnet', status: 'connected', lastSync: '2024-12-19 18:30' },
+    { id: 'i3', name: 'Gmail', icon: 'gmail', status: 'disconnected' },
+    { id: 'i4', name: 'Google Calendar', icon: 'gcal', status: 'connected', lastSync: '2024-12-20 10:15' },
+    { id: 'i5', name: 'Myanmar Job Websites', icon: 'myanmar', status: 'pending' }
+  ]);
+  
+  const [showAutomationBuilder, setShowAutomationBuilder] = useState(false);
+  const [showIntegrationHub, setShowIntegrationHub] = useState(false);
+  const [showDocumentManager, setShowDocumentManager] = useState(false);
+  const [showAuditLog, setShowAuditLog] = useState(false);
+  
   // AI states
   const [aiLoading, setAiLoading] = useState(false);
   const [parsedResume, setParsedResume] = useState<Partial<Candidate> | null>(null);
@@ -596,12 +642,16 @@ export default function TRMPlatform() {
       { id: 'pipeline', label: 'Pipeline', icon: Kanban, badge: filteredDeals.filter(d => d.stage !== 'won').length },
       { id: 'calendar', label: 'Calendar', icon: Calendar, badge: interviews.filter(i => i.status === 'scheduled').length },
       { id: 'tasks', label: 'Tasks', icon: ClipboardList, badge: filteredTasks.filter(t => t.status === 'pending').length },
-      { id: 'ai-tools', label: 'AI Tools', icon: Bot, highlight: true }
+      { id: 'analytics', label: 'Analytics', icon: BarChart3, highlight: true },
+      { id: 'ai-tools', label: 'AI Tools', icon: Bot }
     ];
 
     const adminItems = [
       { id: 'team', label: 'Team', icon: Users, show: isManager },
-      { id: 'reports', label: 'Reports', icon: BarChart3, show: isManager },
+      { id: 'automation', label: 'Automation', icon: Workflow, show: isManager },
+      { id: 'compliance', label: 'Compliance', icon: ShieldCheck, show: isManager },
+      { id: 'integrations', label: 'Integrations', icon: Link, show: isManager },
+      { id: 'reports', label: 'Reports', icon: PieChart2, show: isManager },
       { id: 'admin', label: 'Admin', icon: Shield, show: isMD }
     ];
 
@@ -2310,6 +2360,670 @@ Mg Aung,mgaung@gmail.com,+95 9 111 222 333,Yangon,Machine Operation,5,High Schoo
     </Dialog>
   );
 
+  // ==================== ANALYTICS DASHBOARD ====================
+  const renderAnalytics = () => {
+    const predictiveData = [
+      { month: 'Jan', predicted: 18, actual: 16, confidence: 85 },
+      { month: 'Feb', predicted: 22, actual: 20, confidence: 88 },
+      { month: 'Mar', predicted: 25, actual: 24, confidence: 90 },
+      { month: 'Apr', predicted: 20, actual: 19, confidence: 87 },
+      { month: 'May', predicted: 28, actual: null, confidence: 82 },
+      { month: 'Jun', predicted: 32, actual: null, confidence: 78 }
+    ];
+    
+    const timeToHireData = [
+      { stage: 'Screening', avgDays: 2.5, target: 2 },
+      { stage: 'Interview', avgDays: 5.2, target: 4 },
+      { stage: 'Offer', avgDays: 3.1, target: 2 },
+      { stage: 'Onboarding', avgDays: 4.5, target: 5 }
+    ];
+    
+    const sourceROI = [
+      { source: 'LinkedIn', cost: 500000, hires: 12, costPerHire: 41667, roi: 340 },
+      { source: 'Walk-in', cost: 0, hires: 35, costPerHire: 0, roi: 999 },
+      { source: 'Referral', cost: 200000, hires: 20, costPerHire: 10000, roi: 520 },
+      { source: 'JobNet', cost: 300000, hires: 8, costPerHire: 37500, roi: 280 }
+    ];
+    
+    const skillsDemand = [
+      { skill: 'Machine Operation', demand: 95, supply: 60 },
+      { skill: 'Quality Control', demand: 88, supply: 70 },
+      { skill: 'Customer Service', demand: 82, supply: 85 },
+      { skill: 'English', demand: 78, supply: 45 },
+      { skill: 'Construction', demand: 75, supply: 55 },
+      { skill: 'Banking', demand: 70, supply: 65 }
+    ];
+    
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Advanced Analytics</h2>
+            <p className="text-slate-500">Predictive insights & performance metrics</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Select value={analyticsPeriod} onValueChange={(v: any) => setAnalyticsPeriod(v)}>
+              <SelectTrigger className={`w-32 ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
+                <SelectItem value="quarter">This Quarter</SelectItem>
+                <SelectItem value="year">This Year</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" /> Export
+            </Button>
+          </div>
+        </div>
+        
+        {/* Predictive Hiring Funnel */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+                <TrendingUp className="h-5 w-5 text-blue-500" /> Predictive Hiring Forecast
+              </CardTitle>
+              <CardDescription>AI-powered placement predictions</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <ComposedChart data={predictiveData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                  <XAxis dataKey="month" stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                  <YAxis stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                  <Tooltip />
+                  <Bar dataKey="actual" fill="#3b82f6" name="Actual" radius={[4, 4, 0, 0]} />
+                  <Line type="monotone" dataKey="predicted" stroke="#f59e0b" strokeWidth={3} name="Predicted" strokeDasharray="5 5" />
+                </ComposedChart>
+              </ResponsiveContainer>
+              <div className="mt-4 flex items-center justify-center gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-3 rounded bg-blue-500" />
+                  <span className="text-sm text-slate-500">Actual Placements</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-3 rounded bg-amber-500" />
+                  <span className="text-sm text-slate-500">AI Prediction</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+                <Clock className="h-5 w-5 text-green-500" /> Time-to-Hire Analysis
+              </CardTitle>
+              <CardDescription>Average days per recruitment stage</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={timeToHireData} layout="vertical">
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                  <XAxis type="number" stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'} />
+                  <YAxis dataKey="stage" type="category" stroke={theme === 'dark' ? '#9ca3af' : '#6b7280'} width={80} />
+                  <Tooltip />
+                  <Bar dataKey="avgDays" fill="#10b981" name="Avg Days" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="target" fill="#d1d5db" name="Target" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Source ROI & Skills Demand */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+                <DollarSign className="h-5 w-5 text-purple-500" /> Source ROI Analysis
+              </CardTitle>
+              <CardDescription>Cost effectiveness by recruitment channel</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {sourceROI.map((s, i) => (
+                  <div key={i} className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{s.source}</span>
+                      <Badge className={s.roi > 400 ? 'bg-green-100 text-green-700' : s.roi > 200 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}>
+                        {s.roi === 999 ? '∞' : s.roi + '%'} ROI
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <p className="text-slate-500">Cost</p>
+                        <p className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>{s.cost > 0 ? formatMMK(s.cost) : 'Free'}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-500">Hires</p>
+                        <p className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>{s.hires}</p>
+                      </div>
+                      <div>
+                        <p className="text-slate-500">Per Hire</p>
+                        <p className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>{s.costPerHire > 0 ? formatMMK(s.costPerHire) : '-'}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <CardHeader>
+              <CardTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+                <Target className="h-5 w-5 text-orange-500" /> Skills Demand Heatmap
+              </CardTitle>
+              <CardDescription>Market demand vs candidate supply</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <RadarChart data={skillsDemand}>
+                  <PolarGrid stroke={theme === 'dark' ? '#374151' : '#e5e7eb'} />
+                  <PolarAngleAxis dataKey="skill" tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280', fontSize: 11 }} />
+                  <PolarRadiusAxis tick={{ fill: theme === 'dark' ? '#9ca3af' : '#6b7280' }} />
+                  <Radar name="Demand" dataKey="demand" stroke="#ef4444" fill="#ef4444" fillOpacity={0.3} />
+                  <Radar name="Supply" dataKey="supply" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+                  <Legend />
+                </RadarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* AI Insights */}
+        <Card className={`border-2 border-dashed ${theme === 'dark' ? 'bg-slate-800 border-purple-500/30' : 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200'}`}>
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : ''}`}>AI-Powered Insights</h3>
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className={theme === 'dark' ? 'text-slate-300' : ''}>Walk-in candidates have highest ROI - consider expanding walk-in hours</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <AlertCircle className="h-4 w-4 text-amber-500" />
+                    <span className={theme === 'dark' ? 'text-slate-300' : ''}>English skill gap detected - 55% demand vs 45% supply, consider training partnerships</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <TrendingUp className="h-4 w-4 text-blue-500" />
+                    <span className={theme === 'dark' ? 'text-slate-300' : ''}>Predicted 28% increase in placements next month based on current pipeline</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
+
+  // ==================== AUTOMATION ENGINE ====================
+  const renderAutomation = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Workflow Automation</h2>
+          <p className="text-slate-500">Streamline your recruitment processes</p>
+        </div>
+        <Button onClick={() => setShowAutomationBuilder(true)}>
+          <Plus className="h-4 w-4 mr-2" /> Create Automation
+        </Button>
+      </div>
+      
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Active Automations</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{automations.filter(a => a.active).length}</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
+                <Play className="h-5 w-5 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Total Executions</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{automations.reduce((sum, a) => sum + a.executions, 0)}</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <Zap className="h-5 w-5 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Time Saved</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>48 hrs</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                <Clock className="h-5 w-5 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Efficiency Gain</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>+32%</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-amber-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Automation List */}
+      <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <CardHeader>
+          <CardTitle className={theme === 'dark' ? 'text-white' : ''}>Automations</CardTitle>
+          <CardDescription>Manage your workflow automations</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {automations.map(auto => (
+              <div key={auto.id} className={`flex items-center justify-between p-4 rounded-lg border ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : 'bg-slate-50 border-slate-200'}`}>
+                <div className="flex items-center gap-4">
+                  <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${auto.active ? 'bg-green-100' : 'bg-slate-200'}`}>
+                    {auto.active ? <Play className="h-5 w-5 text-green-600" /> : <Pause className="h-5 w-5 text-slate-400" />}
+                  </div>
+                  <div>
+                    <p className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{auto.name}</p>
+                    <p className="text-sm text-slate-500">When: {auto.trigger} → Then: {auto.action}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Badge variant="outline" className={theme === 'dark' ? 'border-slate-600' : ''}>
+                    {auto.executions} runs
+                  </Badge>
+                  <Switch checked={auto.active} onCheckedChange={(checked) => {
+                    setAutomations(automations.map(a => a.id === auto.id ? {...a, active: checked} : a));
+                  }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // ==================== COMPLIANCE CENTER ====================
+  const renderCompliance = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Compliance Center</h2>
+          <p className="text-slate-500">Documents, certifications & audit trails</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => setShowAuditLog(true)}>
+            <History className="h-4 w-4 mr-2" /> Audit Log
+          </Button>
+          <Button onClick={() => setShowDocumentManager(true)}>
+            <Plus className="h-4 w-4 mr-2" /> Add Document
+          </Button>
+        </div>
+      </div>
+      
+      {/* Compliance Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Documents</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{documents.length}</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <FileText className="h-5 w-5 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Pending Signatures</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{documents.filter(d => d.status === 'sent').length}</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                <FileSignature className="h-5 w-5 text-amber-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Expiring Soon</p>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>2</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-500">Compliance Score</p>
+                <p className={`text-2xl font-bold text-green-600`}>94%</p>
+              </div>
+              <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
+                <ShieldCheck className="h-5 w-5 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Documents Table */}
+      <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <CardHeader>
+          <CardTitle className={theme === 'dark' ? 'text-white' : ''}>Document Management</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {documents.map(doc => (
+              <div key={doc.id} className={`flex items-center justify-between p-4 rounded-lg border ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : 'bg-slate-50 border-slate-200'}`}>
+                <div className="flex items-center gap-3">
+                  <FileText className={`h-5 w-5 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`} />
+                  <div>
+                    <p className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{doc.name}</p>
+                    <p className="text-sm text-slate-500">{doc.candidateName || 'Template'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  {doc.expiryDate && (
+                    <span className="text-sm text-amber-600">Expires: {formatDate(doc.expiryDate)}</span>
+                  )}
+                  <Badge className={
+                    doc.status === 'signed' ? 'bg-green-100 text-green-700' :
+                    doc.status === 'sent' ? 'bg-amber-100 text-amber-700' :
+                    'bg-slate-100 text-slate-700'
+                  }>
+                    {doc.status}
+                  </Badge>
+                  <Button variant="ghost" size="sm">
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // ==================== INTEGRATIONS HUB ====================
+  const renderIntegrations = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : ''}`}>Integration Hub</h2>
+          <p className="text-slate-500">Connect your favorite tools</p>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {integrations.map(int => (
+          <Card key={int.id} className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  {int.icon === 'linkedin' ? <Linkedin className="h-6 w-6 text-white" /> :
+                   int.icon === 'gmail' ? <Mail className="h-6 w-6 text-white" /> :
+                   int.icon === 'gcal' ? <Calendar className="h-6 w-6 text-white" /> :
+                   <Globe className="h-6 w-6 text-white" />}
+                </div>
+                <Badge className={
+                  int.status === 'connected' ? 'bg-green-100 text-green-700' :
+                  int.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                  'bg-slate-100 text-slate-700'
+                }>
+                  {int.status}
+                </Badge>
+              </div>
+              <h3 className={`font-bold ${theme === 'dark' ? 'text-white' : ''}`}>{int.name}</h3>
+              {int.lastSync && (
+                <p className="text-sm text-slate-500 mt-1">Last sync: {int.lastSync}</p>
+              )}
+              <Button 
+                className="w-full mt-4" 
+                variant={int.status === 'connected' ? 'outline' : 'default'}
+              >
+                {int.status === 'connected' ? 'Configure' : 
+                 int.status === 'pending' ? 'Setup' : 'Connect'}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+        
+        {/* Add Integration Card */}
+        <Card className={`border-2 border-dashed ${theme === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}>
+          <CardContent className="p-6 flex flex-col items-center justify-center h-full min-h-[180px]">
+            <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
+              <Plus className="h-6 w-6 text-slate-400" />
+            </div>
+            <p className={`font-medium ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>Add Integration</p>
+            <p className="text-sm text-slate-400">Connect more tools</p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Webhooks */}
+      <Card className={`${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <CardHeader>
+          <CardTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Link2 className="h-5 w-5" /> Webhooks
+          </CardTitle>
+          <CardDescription>Real-time event notifications</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>Candidate Status Webhook</p>
+                <p className="text-sm text-slate-500 font-mono">https://api.trm.com/webhook/candidate-status</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-green-100 text-green-700">Active</Badge>
+                <Button variant="ghost" size="sm">
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // ==================== AUTOMATION BUILDER DIALOG ====================
+  const renderAutomationBuilderDialog = () => (
+    <Dialog open={showAutomationBuilder} onOpenChange={setShowAutomationBuilder}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Workflow className="h-5 w-5 text-purple-500" /> Create Automation
+          </DialogTitle>
+          <DialogDescription>Build automated workflows</DialogDescription>
+        </DialogHeader>
+        <div className="mt-4 space-y-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Automation Name</Label>
+            <Input placeholder="e.g., Welcome Email" className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Trigger</Label>
+            <Select>
+              <SelectTrigger className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select trigger" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="new_candidate">New Candidate Added</SelectItem>
+                <SelectItem value="interview_scheduled">Interview Scheduled</SelectItem>
+                <SelectItem value="job_assigned">Job Assigned</SelectItem>
+                <SelectItem value="status_change">Status Changed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Action</Label>
+            <Select>
+              <SelectTrigger className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select action" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="send_email">Send Email</SelectItem>
+                <SelectItem value="create_task">Create Task</SelectItem>
+                <SelectItem value="notify">Send Notification</SelectItem>
+                <SelectItem value="update_status">Update Status</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <DialogFooter className="mt-6">
+          <Button variant="outline" onClick={() => setShowAutomationBuilder(false)}>Cancel</Button>
+          <Button onClick={() => {
+            setAutomations([...automations, { id: `auto${automations.length + 1}`, name: 'New Automation', trigger: 'Manual', action: 'Custom', active: true, executions: 0 }]);
+            setShowAutomationBuilder(false);
+          }}>
+            <Zap className="h-4 w-4 mr-2" /> Create
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // ==================== INTEGRATION HUB DIALOG ====================
+  const renderIntegrationHubDialog = () => (
+    <Dialog open={showIntegrationHub} onOpenChange={setShowIntegrationHub}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <Link className="h-5 w-5 text-blue-500" /> Connect Integration
+          </DialogTitle>
+        </DialogHeader>
+        <div className="mt-4">
+          <p className={theme === 'dark' ? 'text-slate-300' : ''}>Integration configuration options...</p>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setShowIntegrationHub(false)}>Close</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // ==================== DOCUMENT MANAGER DIALOG ====================
+  const renderDocumentManagerDialog = () => (
+    <Dialog open={showDocumentManager} onOpenChange={setShowDocumentManager}>
+      <DialogContent className={`max-w-lg ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <FileText className="h-5 w-5 text-blue-500" /> Add Document
+          </DialogTitle>
+        </DialogHeader>
+        <div className="mt-4 space-y-4">
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Document Name</Label>
+            <Input placeholder="e.g., Employment Contract" className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`} />
+          </div>
+          <div>
+            <Label className={theme === 'dark' ? 'text-slate-300' : ''}>Type</Label>
+            <Select>
+              <SelectTrigger className={`mt-1 ${theme === 'dark' ? 'bg-slate-700 border-slate-600' : ''}`}>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="contract">Contract</SelectItem>
+                <SelectItem value="nda">NDA</SelectItem>
+                <SelectItem value="offer">Offer Letter</SelectItem>
+                <SelectItem value="permit">Work Permit</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className={`p-8 border-2 border-dashed rounded-lg text-center ${theme === 'dark' ? 'border-slate-600' : 'border-slate-300'}`}>
+            <Upload className="h-8 w-8 mx-auto text-slate-400 mb-2" />
+            <p className="text-sm text-slate-500">Drag & drop or click to upload</p>
+          </div>
+        </div>
+        <DialogFooter className="mt-6">
+          <Button variant="outline" onClick={() => setShowDocumentManager(false)}>Cancel</Button>
+          <Button onClick={() => setShowDocumentManager(false)}>
+            <Upload className="h-4 w-4 mr-2" /> Upload
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // ==================== AUDIT LOG DIALOG ====================
+  const renderAuditLogDialog = () => (
+    <Dialog open={showAuditLog} onOpenChange={setShowAuditLog}>
+      <DialogContent className={`max-w-2xl ${theme === 'dark' ? 'bg-slate-800 border-slate-700' : ''}`}>
+        <DialogHeader>
+          <DialogTitle className={`flex items-center gap-2 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <History className="h-5 w-5 text-purple-500" /> Audit Log
+          </DialogTitle>
+          <DialogDescription>Recent system activity</DialogDescription>
+        </DialogHeader>
+        <div className="mt-4 space-y-3 max-h-[400px] overflow-auto">
+          {auditLogs.map(log => (
+            <div key={log.id} className={`flex items-start gap-3 p-3 rounded-lg ${theme === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <Activity className="h-4 w-4 text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <p className={`font-medium ${theme === 'dark' ? 'text-white' : ''}`}>{log.action}</p>
+                <p className="text-sm text-slate-500">{log.details}</p>
+                <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
+                  <span>{log.user}</span>
+                  <span>•</span>
+                  <span>{log.timestamp}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <DialogFooter className="mt-4">
+          <Button variant="outline" onClick={() => setShowAuditLog(false)}>Close</Button>
+          <Button>
+            <Download className="h-4 w-4 mr-2" /> Export
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+
   // ==================== RENDER ====================
   if (!isAuthenticated || !currentUser) return renderLogin();
 
@@ -2322,8 +3036,12 @@ Mg Aung,mgaung@gmail.com,+95 9 111 222 333,Yangon,Machine Operation,5,High Schoo
       case 'pipeline': return renderPipeline();
       case 'calendar': return renderCalendar();
       case 'tasks': return renderTasks();
+      case 'analytics': return renderAnalytics();
       case 'ai-tools': return renderAITools();
       case 'team': return renderTeam();
+      case 'automation': return renderAutomation();
+      case 'compliance': return renderCompliance();
+      case 'integrations': return renderIntegrations();
       case 'reports': return renderReports();
       case 'admin': return renderAdmin();
       default: return renderDashboard();
@@ -2352,6 +3070,10 @@ Mg Aung,mgaung@gmail.com,+95 9 111 222 333,Yangon,Machine Operation,5,High Schoo
       {renderInvoiceDialog()}
       {renderReferralDialog()}
       {renderSkillsDialog()}
+      {renderAutomationBuilderDialog()}
+      {renderIntegrationHubDialog()}
+      {renderDocumentManagerDialog()}
+      {renderAuditLogDialog()}
     </div>
   );
 }
